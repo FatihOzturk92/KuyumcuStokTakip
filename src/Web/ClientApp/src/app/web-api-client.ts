@@ -1233,3 +1233,37 @@ function blobToText(blob: any): Observable<string> {
         }
     });
 }
+
+// Temporary stubs for new endpoints - to be replaced by NSwag generation
+export interface ExpenseDto { [key: string]: any; id?: number; }
+export interface CreateExpenseCommand { [key: string]: any; }
+export interface UpdateExpenseCommand { id: number; [key: string]: any; }
+@Injectable({ providedIn: 'root' })
+export class ExpensesClient {
+    getExpenses(pageNumber: number, pageSize: number): Observable<any> { return _observableOf({ items: [] }); }
+    createExpense(command: CreateExpenseCommand): Observable<number> { return _observableOf(0); }
+    updateExpense(id: number, command: UpdateExpenseCommand): Observable<void> { return _observableOf(undefined); }
+    deleteExpense(id: number): Observable<void> { return _observableOf(undefined); }
+}
+
+export interface PartnerDto { [key: string]: any; id?: number; }
+export interface CreatePartnerCommand { [key: string]: any; }
+export interface UpdatePartnerCommand { id: number; [key: string]: any; }
+@Injectable({ providedIn: 'root' })
+export class PartnersClient {
+    getPartners(pageNumber: number, pageSize: number): Observable<any> { return _observableOf({ items: [] }); }
+    createPartner(command: CreatePartnerCommand): Observable<number> { return _observableOf(0); }
+    updatePartner(id: number, command: UpdatePartnerCommand): Observable<void> { return _observableOf(undefined); }
+    deletePartner(id: number): Observable<void> { return _observableOf(undefined); }
+}
+
+export interface InventoryProductDto { [key: string]: any; id?: number; }
+export interface CreateInventoryProductCommand { [key: string]: any; }
+export interface UpdateInventoryProductCommand { id: number; [key: string]: any; }
+@Injectable({ providedIn: 'root' })
+export class InventoryProductsClient {
+    getInventoryProducts(pageNumber: number, pageSize: number): Observable<any> { return _observableOf({ items: [] }); }
+    createInventoryProduct(command: CreateInventoryProductCommand): Observable<number> { return _observableOf(0); }
+    updateInventoryProduct(id: number, command: UpdateInventoryProductCommand): Observable<void> { return _observableOf(undefined); }
+    deleteInventoryProduct(id: number): Observable<void> { return _observableOf(undefined); }
+}

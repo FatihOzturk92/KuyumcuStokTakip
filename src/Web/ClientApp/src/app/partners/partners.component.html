@@ -1,0 +1,70 @@
+<h1>Partners</h1>
+<button class="btn btn-primary mb-2" (click)="openCreate(editTemplate)">Add Partner</button>
+<table class="table table-striped" *ngIf="partners.length">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Phone</th>
+      <th>Email</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (p of partners; track $index) {
+    <tr>
+      <td>{{ p.name }}</td>
+      <td>{{ p.type }}</td>
+      <td>{{ p.parnerPhone }}</td>
+      <td>{{ p.parnerEmail }}</td>
+      <td>
+        <button class="btn btn-sm btn-secondary" (click)="openEdit(editTemplate,p)">Edit</button>
+        <button class="btn btn-sm btn-danger ms-1" (click)="confirmDelete(deleteTemplate,p)">Delete</button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+
+<ng-template #editTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ selected ? 'Edit' : 'New' }} Partner</h4>
+    <button type="button" class="close btn-close" aria-label="Close" (click)="modalRef?.hide()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-2">
+      <label class="form-label">Name</label>
+      <input class="form-control" [(ngModel)]="editor.name" />
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Type</label>
+      <input class="form-control" [(ngModel)]="editor.type" />
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Phone</label>
+      <input class="form-control" [(ngModel)]="editor.parnerPhone" />
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Email</label>
+      <input class="form-control" [(ngModel)]="editor.parnerEmail" />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modalRef?.hide()">Cancel</button>
+    <button class="btn btn-primary" (click)="save()">Save</button>
+  </div>
+</ng-template>
+
+<ng-template #deleteTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Delete Partner?</h4>
+    <button type="button" class="close btn-close" aria-label="Close" (click)="modalRef?.hide()"></button>
+  </div>
+  <div class="modal-body">
+    Are you sure you want to delete this partner?
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modalRef?.hide()">Cancel</button>
+    <button class="btn btn-danger" (click)="deleteConfirmed()">Delete</button>
+  </div>
+</ng-template>
