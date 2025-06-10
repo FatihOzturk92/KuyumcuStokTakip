@@ -1,0 +1,20 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "ng serve",
+      "type": "shell",
+      "command": "npm run start",
+      "options": {
+        "cwd": "${workspaceFolder}/src/Web/ClientApp"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "build",
+      "command": "dotnet build ${workspaceFolder}/src/Web",
+      "type": "shell",
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}
