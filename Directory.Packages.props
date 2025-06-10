@@ -46,5 +46,6 @@
     <PackageVersion Include="Microsoft.Playwright" Version="1.48.0" />
     <PackageVersion Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.57" />
     <PackageVersion Include="SpecFlow.NUnit" Version="3.9.74" />
+    <PackageVersion Include="Bogus" Version="35.6.3" />
   </ItemGroup>
 </Project>
