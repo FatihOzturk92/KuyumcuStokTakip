@@ -5,6 +5,8 @@ using KuyumcuStokTakip.Application.Common.Interfaces;
 using KuyumcuStokTakip.Application.Common.Models;
 using KuyumcuStokTakip.Application.TodoItems.Queries.GetTodoItemsWithPagination;
 using KuyumcuStokTakip.Application.TodoLists.Queries.GetTodos;
+using KuyumcuStokTakip.Application.InventoryProducts.Queries.GetInventoryProducts;
+using KuyumcuStokTakip.Application.Expenses.Queries.GetExpenses;
 using KuyumcuStokTakip.Domain.Entities;
 using NUnit.Framework;
 
@@ -35,6 +37,8 @@ public class MappingTests
     [TestCase(typeof(TodoList), typeof(LookupDto))]
     [TestCase(typeof(TodoItem), typeof(LookupDto))]
     [TestCase(typeof(TodoItem), typeof(TodoItemBriefDto))]
+    [TestCase(typeof(InventoryProduct), typeof(InventoryProductDto))]
+    [TestCase(typeof(Expense), typeof(ExpenseDto))]
     public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
     {
         var instance = GetInstanceOf(source);
