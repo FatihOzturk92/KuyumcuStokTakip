@@ -1,6 +1,10 @@
 ﻿using KuyumcuStokTakip.Domain.Constants;
 using KuyumcuStokTakip.Domain.Entities;
 using KuyumcuStokTakip.Infrastructure.Identity;
+using KuyumcuStokTakip.Domain.Entities.Account;
+using KuyumcuStokTakip.Domain.Entities.Inventory;
+using KuyumcuStokTakip.Domain.Entities.Sales;
+using Bogus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -109,6 +113,140 @@ public class ApplicationDbContextInitialiser
                     new TodoItem { Title = "Reward yourself with a nice, long nap 🏆" },
                 }
             });
+
+            await _context.SaveChangesAsync();
+        }
+
+        // Seed partners
+        if (!_context.Partners.Any())
+        {
+            var faker = new Bogus.Faker("tr");
+            _context.Partners.AddRange(
+                new Partner
+                {
+                    Name = faker.Company.CompanyName(),
+                    Type = PartnerType.Wholesaler.ToString(),
+                    ParnerPhone = faker.Phone.PhoneNumber(),
+                    ParnerEmail = faker.Internet.Email(),
+                    ParnerAddress = faker.Address.FullAddress(),
+                    Note = faker.Lorem.Sentence()
+                },
+                new Partner
+                {
+                    Name = faker.Company.CompanyName(),
+                    Type = PartnerType.Workshop.ToString(),
+                    ParnerPhone = faker.Phone.PhoneNumber(),
+                    ParnerEmail = faker.Internet.Email(),
+                    ParnerAddress = faker.Address.FullAddress(),
+                    Note = faker.Lorem.Sentence()
+                });
+
+            await _context.SaveChangesAsync();
+        }
+
+        // Seed inventories
+        if (!_context.Inventories.Any())
+        {
+            var partner = _context.Partners.First();
+            _context.Inventories.Add(new Inventory
+            {
+                Code = "INV001",
+                Name = "Main Inventory",
+                Description = "Default inventory",
+                AccountPartnerId = partner.Id
+            });
+
+            await _context.SaveChangesAsync();
+        }
+
+        // Seed product categories
+        if (!_context.ProductCategories.Any())
+        {
+            _context.ProductCategories.AddRange(
+                new ProductCategory { Name = "Altın" },
+                new ProductCategory { Name = "Gümüş" });
+
+            await _context.SaveChangesAsync();
+        }
+
+        // Seed stock units
+        if (!_context.StockUnits.Any())
+        {
+            _context.StockUnits.AddRange(
+                new StockUnit { Name = "Gram", Symbol = "g" },
+                new StockUnit { Name = "Adet", Symbol = "adet" });
+
+            await _context.SaveChangesAsync();
+        }
+
+        // Seed inventory products
+        if (!_context.InventoryProducts.Any())
+        {
+            var inventory = _context.Inventories.First();
+            var category = _context.ProductCategories.First();
+            var unit = _context.StockUnits.First();
+
+            _context.InventoryProducts.Add(new InventoryProduct
+            {
+                Code = "PRD001",
+                Name = "Altın Bilezik",
+                InventoryId = inventory.Id,
+                CategoryId = category.Id,
+                UnitId = unit.Id,
+                TotalWeight = 0,
+                TotalPieceCount = 0,
+                TotalLaborCost = 0,
+                TotalMaterialCost = 0
+            });
+
+            await _context.SaveChangesAsync();
+        }
+
+        // Seed stock transactions
+        if (!_context.StockTransactions.Any())
+        {
+            var faker = new Bogus.Faker("tr");
+            var product = _context.InventoryProducts.First();
+
+            _context.StockTransactions.Add(new StockTransaction
+            {
+                InventoryProductId = product.Id,
+                TransactionDate = faker.Date.Recent(),
+                Quantity = faker.Random.Decimal(1, 10),
+                UnitPrice = faker.Random.Decimal(1000, 2000),
+                Weight = faker.Random.Decimal(1, 100),
+                PureGram = faker.Random.Decimal(1, 100),
+                PureUnitPrice = faker.Random.Decimal(1000, 2000),
+                LaborUnitPrice = faker.Random.Decimal(50, 100),
+                UnitPriceType = EUnitPriceType.TL,
+                Type = EStockTransactionType.In,
+                TotalCost = faker.Random.Decimal(1000, 5000)
+            });
+
+            await _context.SaveChangesAsync();
+        }
+
+        // Seed sales
+        if (!_context.Sales.Any())
+        {
+            var product = _context.InventoryProducts.First();
+
+            var sale = new Sale
+            {
+                SaleDate = DateTime.UtcNow,
+                PaymentMethod = EPaymentType.Cash,
+                Currency = "TL",
+                Description = "Sample sale"
+            };
+
+            sale.Items.Add(new SaleItem
+            {
+                InventoryProductId = product.Id,
+                Quantity = 1,
+                UnitPrice = 1200
+            });
+
+            _context.Sales.Add(sale);
 
             await _context.SaveChangesAsync();
         }
