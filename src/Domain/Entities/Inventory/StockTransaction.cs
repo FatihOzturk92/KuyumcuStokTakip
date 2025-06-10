@@ -11,7 +11,7 @@ public class StockTransaction : BaseAuditableEntity
     public decimal LaborUnitPrice { get; set; }    // İşçilik gram fiyatı
 
     public Guid InventoryProductId { get; set; }
-    public InventoryProduct InventoryProducts { get; set; } = default!;
+    public InventoryProduct InventoryProduct { get; set; } = default!;
 
     public Guid? ProductItemId { get; set; }
     public ProductItem? ProductItem { get; set; } = default!;

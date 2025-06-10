@@ -8,10 +8,10 @@ public class SaleItem : BaseAuditableEntity
     public Sale Sale { get; set; } = default!;
 
     public Guid? ProductItemId { get; set; }
-    public ProductItem? ProductItems { get; set; }
+    public ProductItem? ProductItem { get; set; }
 
     public Guid? InventoryProductId { get; set; }
-    public InventoryProduct? InventoryProducts { get; set; }
+    public InventoryProduct? InventoryProduct { get; set; }
 
     public decimal Quantity { get; set; }
     public decimal UnitPrice { get; set; }
