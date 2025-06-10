@@ -4,7 +4,7 @@ namespace KuyumcuStokTakip.Domain.Entities.Finance;
 
 public class PartnerAccountTransaction : BaseAuditableEntity
 {
-    public Guid PartnerId { get; set; }
+    public int PartnerId { get; set; }
     public Partner Partner { get; set; } = default!;
 
     public DateTime TransactionDate { get; set; } = DateTime.UtcNow;

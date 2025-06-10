@@ -12,13 +12,13 @@ public class InventoryProduct : BaseAuditableEntity
     public string Name { get; set; } = default!;
     public string? Description { get; set; }
 
-    public Guid CategoryId { get; set; }
+    public int CategoryId { get; set; }
     public ProductCategory Category { get; set; } = default!;
 
-    public Guid InventoryId { get; set; }// bir kuyumcu için bir id var 
+    public int InventoryId { get; set; }// bir kuyumcu için bir id var
     public Inventory Inventory { get; set; } = default!;
 
-    public Guid UnitId { get; set; }
+    public int UnitId { get; set; }
     public StockUnit Unit { get; set; } = default!;
 
     public decimal TotalWeight { get; set; } // Bu ürün grubunun toplam gramajı

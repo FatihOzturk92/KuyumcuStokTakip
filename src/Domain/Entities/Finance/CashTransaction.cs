@@ -13,9 +13,9 @@ public class CashTransaction : BaseAuditableEntity
     public string? Currency { get; set; } // TL, USD, ALTIN vb.
     public string? Description { get; set; } // Açıklama (örn: Satış tahsilatı)
 
-    public Guid? CustomerId { get; set; }
+    public int? CustomerId { get; set; }
     public Customer? Customer { get; set; }
 
-    public Guid? PartnerId { get; set; }
+    public int? PartnerId { get; set; }
     public Partner? Partner { get; set; }
 }

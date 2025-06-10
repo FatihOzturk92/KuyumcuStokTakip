@@ -6,7 +6,7 @@ namespace KuyumcuStokTakip.Domain.Entities.Sales;
 public class Sale : BaseAuditableEntity
 {
     public DateTime SaleDate { get; set; } = DateTime.UtcNow;
-    public Guid? CustomerId { get; set; }
+    public int? CustomerId { get; set; }
     public Customer? Customer { get; set; }
 
     [NotMapped]
