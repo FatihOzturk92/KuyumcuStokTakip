@@ -5,6 +5,13 @@ public enum ProductType
     CategoryBased,
     PurityBased
 }
+public enum EPaymentType
+{
+    Cash,
+    CreditCard,
+    BankTransfer,
+    Other
+}
 
 public enum EStockTransactionType
 {

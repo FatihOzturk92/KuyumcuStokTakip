@@ -39,4 +39,6 @@ public class StockTransaction : BaseAuditableEntity
 
     public Guid? CustomerId { get; set; }
     public Customer? Customer { get; set; }
+    public decimal TotalCost { get; set; }  // Toplam maliyet (yeni eklenen alan)
+
 }
