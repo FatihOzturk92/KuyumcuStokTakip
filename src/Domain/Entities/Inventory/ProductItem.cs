@@ -6,10 +6,10 @@ public class ProductItem : BaseAuditableEntity
 
     public ProductType ProductType { get; set; } // Ürün tipi (model bazlı vs.)
 
-    public Guid InventoryProductId { get; set; }
+    public int InventoryProductId { get; set; }
     public InventoryProduct InventoryProduct { get; set; } = default!;
 
-    public Guid? StockTransactionId { get; set; } // hangi girişten geldi
+    public int? StockTransactionId { get; set; } // hangi girişten geldi
     public StockTransaction? StockTransaction { get; set; }
 
     public string Barcode { get; set; } = default!;

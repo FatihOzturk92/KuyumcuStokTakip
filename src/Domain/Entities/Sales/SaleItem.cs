@@ -4,13 +4,13 @@ using KuyumcuStokTakip.Domain.Entities.Inventory;
 namespace KuyumcuStokTakip.Domain.Entities.Sales;
 public class SaleItem : BaseAuditableEntity
 {
-    public Guid SaleId { get; set; }
+    public int SaleId { get; set; }
     public Sale Sale { get; set; } = default!;
 
-    public Guid? ProductItemId { get; set; }
+    public int? ProductItemId { get; set; }
     public ProductItem? ProductItem { get; set; }
 
-    public Guid? InventoryProductId { get; set; }
+    public int? InventoryProductId { get; set; }
     public InventoryProduct? InventoryProduct { get; set; }
 
     public decimal Quantity { get; set; }

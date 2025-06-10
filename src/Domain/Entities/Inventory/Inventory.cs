@@ -12,7 +12,7 @@ public class Inventory : BaseAuditableEntity
     public string Name { get; set; } = default!;
     public string? Description { get; set; }
 
-    public Guid AccountPartnerId { get; set; }
-    public AccountPartner AccountPartner { get; set; } = default!; // atoyedeki depolar 
+    public int AccountPartnerId { get; set; }
+    public AccountPartner AccountPartner { get; set; } = default!; // atölyedeki depolar
     public ICollection<StockTransaction> Transactions { get; set; } = new List<StockTransaction>();
 }
