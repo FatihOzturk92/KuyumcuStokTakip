@@ -1,0 +1,70 @@
+<h1>Inventory Products</h1>
+<button class="btn btn-primary mb-2" (click)="openCreate(editTemplate)">Add Product</button>
+<table class="table table-striped" *ngIf="products.length">
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Weight</th>
+      <th>Piece Count</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (p of products; track $index) {
+    <tr>
+      <td>{{ p.code }}</td>
+      <td>{{ p.name }}</td>
+      <td>{{ p.totalWeight }}</td>
+      <td>{{ p.totalPieceCount }}</td>
+      <td>
+        <button class="btn btn-sm btn-secondary" (click)="openEdit(editTemplate,p)">Edit</button>
+        <button class="btn btn-sm btn-danger ms-1" (click)="confirmDelete(deleteTemplate,p)">Delete</button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+
+<ng-template #editTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ selected ? 'Edit' : 'New' }} Product</h4>
+    <button type="button" class="close btn-close" aria-label="Close" (click)="modalRef?.hide()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-2">
+      <label class="form-label">Code</label>
+      <input class="form-control" [(ngModel)]="editor.code" />
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Name</label>
+      <input class="form-control" [(ngModel)]="editor.name" />
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Weight</label>
+      <input type="number" class="form-control" [(ngModel)]="editor.totalWeight" />
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Piece Count</label>
+      <input type="number" class="form-control" [(ngModel)]="editor.totalPieceCount" />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modalRef?.hide()">Cancel</button>
+    <button class="btn btn-primary" (click)="save()">Save</button>
+  </div>
+</ng-template>
+
+<ng-template #deleteTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Delete Product?</h4>
+    <button type="button" class="close btn-close" aria-label="Close" (click)="modalRef?.hide()"></button>
+  </div>
+  <div class="modal-body">
+    Are you sure you want to delete this product?
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modalRef?.hide()">Cancel</button>
+    <button class="btn btn-danger" (click)="deleteConfirmed()">Delete</button>
+  </div>
+</ng-template>
