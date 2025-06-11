@@ -12,9 +12,9 @@ public class StockBalances : EndpointGroupBase
             .MapGet(GetStockBalances);
     }
 
-    public async Task<Ok<List<StockBalanceDto>>> GetStockBalances(ISender sender)
+    public async Task<Ok<List<StockBalanceDto>>> GetStockBalances(ISender sender, [AsParameters] GetStockBalanceQuery query)
     {
-        var result = await sender.Send(new GetStockBalanceQuery());
+        var result = await sender.Send(query);
         return TypedResults.Ok(result);
     }
 }

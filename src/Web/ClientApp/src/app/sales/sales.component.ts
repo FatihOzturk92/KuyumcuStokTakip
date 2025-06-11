@@ -56,7 +56,7 @@ export class SalesComponent implements OnInit {
   }
 
   load(): void {
-    this.salesClient.getSales(undefined, undefined, undefined, undefined, 1, 50).subscribe({
+    this.salesClient.getSales(1, 50, undefined, undefined, undefined, undefined).subscribe({
       next: r => (this.sales = r.items ?? []),
       error: err => console.error(err)
     });

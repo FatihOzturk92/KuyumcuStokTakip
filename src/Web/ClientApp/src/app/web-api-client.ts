@@ -1718,7 +1718,7 @@ export class SalesClient implements ISalesClient {
 }
 
 export interface IStockBalancesClient {
-    getStockBalances(): Observable<StockBalanceDto[]>;
+    getStockBalances(search: string | null | undefined): Observable<StockBalanceDto[]>;
 }
 
 @Injectable({
@@ -1734,8 +1734,10 @@ export class StockBalancesClient implements IStockBalancesClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    getStockBalances(): Observable<StockBalanceDto[]> {
-        let url_ = this.baseUrl + "/api/StockBalances";
+    getStockBalances(search: string | null | undefined): Observable<StockBalanceDto[]> {
+        let url_ = this.baseUrl + "/api/StockBalances?";
+        if (search !== undefined && search !== null)
+            url_ += "search=" + encodeURIComponent("" + search) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
