@@ -56,6 +56,7 @@ public class CreateSaleCommandHandler : IRequestHandler<CreateSaleCommand, int>
                     InventoryProductId = item.InventoryProductId.Value,
                     ProductItemId = item.ProductItemId,
                     ProductId = item.InventoryProductId.Value,
+                    CustomerId = request.CustomerId,
                     TransactionDate = request.SaleDate,
                     Quantity = item.Quantity,
                     UnitPrice = item.UnitPrice,
