@@ -1,5 +1,6 @@
 using KuyumcuStokTakip.Application.StockTransactions.Commands.CreateStockTransaction;
 using KuyumcuStokTakip.Application.StockBalances.Queries.GetStockBalance;
+using KuyumcuStokTakip.Domain.Entities;
 using KuyumcuStokTakip.Domain.Enums;
 using System.Linq;
 

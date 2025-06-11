@@ -46,31 +46,98 @@ public class CreateStockTransactionCommandHandler : IRequestHandler<CreateStockT
 
     public async Task<int> Handle(CreateStockTransactionCommand request, CancellationToken cancellationToken)
     {
-        var entity = new StockTransaction
+        // Enforce stock movement direction based on special transaction types
+        var type = request.Type;
+        if (request.TransactionType == TransactionType.Wastage)
         {
-            PureGram = request.PureGram,
-            PureUnitPrice = request.PureUnitPrice,
-            LaborUnitPrice = request.LaborUnitPrice,
-            InventoryProductId = request.InventoryProductId,
-            ProductItemId = request.ProductItemId,
-            ProductId = request.ProductId,
-            TransactionType = request.TransactionType,
-            TransactionDate = request.TransactionDate,
-            Quantity = request.Quantity,
-            UnitPrice = request.UnitPrice,
-            Weight = request.Weight,
-            UnitPriceType = request.UnitPriceType,
-            Type = request.Type,
-            Description = request.Description,
-            OutgoingTargetType = request.OutgoingTargetType,
-            SourceCompanyId = request.SourceCompanyId,
-            TargetCompanyId = request.TargetCompanyId,
-            CustomerId = request.CustomerId,
-            TotalCost = request.TotalCost
-        };
+            type = EStockTransactionType.Out;
+        }
+        else if (request.TransactionType == TransactionType.Return)
+        {
+            type = EStockTransactionType.In;
+        }
 
-        _context.StockTransactions.Add(entity);
-        await _context.SaveChangesAsync(cancellationToken);
-        return entity.Id;
+        // Exchange requires two separate transactions: one out and one in
+        if (request.TransactionType == TransactionType.Exchange)
+        {
+            var outEntity = new StockTransaction
+            {
+                PureGram = request.PureGram,
+                PureUnitPrice = request.PureUnitPrice,
+                LaborUnitPrice = request.LaborUnitPrice,
+                InventoryProductId = request.InventoryProductId,
+                ProductItemId = request.ProductItemId,
+                ProductId = request.ProductId,
+                TransactionType = request.TransactionType,
+                TransactionDate = request.TransactionDate,
+                Quantity = request.Quantity,
+                UnitPrice = request.UnitPrice,
+                Weight = request.Weight,
+                UnitPriceType = request.UnitPriceType,
+                Type = EStockTransactionType.Out,
+                Description = request.Description,
+                OutgoingTargetType = request.OutgoingTargetType,
+                SourceCompanyId = request.SourceCompanyId,
+                TargetCompanyId = request.TargetCompanyId,
+                CustomerId = request.CustomerId,
+                TotalCost = request.TotalCost
+            };
+
+            var inEntity = new StockTransaction
+            {
+                PureGram = request.PureGram,
+                PureUnitPrice = request.PureUnitPrice,
+                LaborUnitPrice = request.LaborUnitPrice,
+                InventoryProductId = request.InventoryProductId,
+                ProductItemId = request.ProductItemId,
+                ProductId = request.ProductId,
+                TransactionType = request.TransactionType,
+                TransactionDate = request.TransactionDate,
+                Quantity = request.Quantity,
+                UnitPrice = request.UnitPrice,
+                Weight = request.Weight,
+                UnitPriceType = request.UnitPriceType,
+                Type = EStockTransactionType.In,
+                Description = request.Description,
+                OutgoingTargetType = request.OutgoingTargetType,
+                SourceCompanyId = request.SourceCompanyId,
+                TargetCompanyId = request.TargetCompanyId,
+                CustomerId = request.CustomerId,
+                TotalCost = request.TotalCost
+            };
+
+            _context.StockTransactions.AddRange(outEntity, inEntity);
+            await _context.SaveChangesAsync(cancellationToken);
+            return inEntity.Id;
+        }
+        else
+        {
+            var entity = new StockTransaction
+            {
+                PureGram = request.PureGram,
+                PureUnitPrice = request.PureUnitPrice,
+                LaborUnitPrice = request.LaborUnitPrice,
+                InventoryProductId = request.InventoryProductId,
+                ProductItemId = request.ProductItemId,
+                ProductId = request.ProductId,
+                TransactionType = request.TransactionType,
+                TransactionDate = request.TransactionDate,
+                Quantity = request.Quantity,
+                UnitPrice = request.UnitPrice,
+                Weight = request.Weight,
+                UnitPriceType = request.UnitPriceType,
+                Type = type,
+                Description = request.Description,
+                OutgoingTargetType = request.OutgoingTargetType,
+                SourceCompanyId = request.SourceCompanyId,
+                TargetCompanyId = request.TargetCompanyId,
+                CustomerId = request.CustomerId,
+                TotalCost = request.TotalCost
+            };
+
+            _context.StockTransactions.Add(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+            return entity.Id;
+        }
     }
 }
