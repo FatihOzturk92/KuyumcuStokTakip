@@ -11,6 +11,7 @@ public class SaleItemDto
     public decimal Quantity { get; init; }
     public decimal UnitPrice { get; init; }
     public decimal Total { get; init; }
+    public decimal? Profit { get; set; }
 
     private class Mapping : Profile
     {
