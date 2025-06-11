@@ -126,18 +126,18 @@ public class ApplicationDbContextInitialiser
                 {
                     Name = faker.Company.CompanyName(),
                     Type = PartnerType.Wholesaler.ToString(),
-                    ParnerPhone = faker.Phone.PhoneNumber(),
-                    ParnerEmail = faker.Internet.Email(),
-                    ParnerAddress = faker.Address.FullAddress(),
+                    PartnerPhone = faker.Phone.PhoneNumber(),
+                    PartnerEmail = faker.Internet.Email(),
+                    PartnerAddress = faker.Address.FullAddress(),
                     Note = faker.Lorem.Sentence()
                 },
                 new Partner
                 {
                     Name = faker.Company.CompanyName(),
                     Type = PartnerType.Workshop.ToString(),
-                    ParnerPhone = faker.Phone.PhoneNumber(),
-                    ParnerEmail = faker.Internet.Email(),
-                    ParnerAddress = faker.Address.FullAddress(),
+                    PartnerPhone = faker.Phone.PhoneNumber(),
+                    PartnerEmail = faker.Internet.Email(),
+                    PartnerAddress = faker.Address.FullAddress(),
                     Note = faker.Lorem.Sentence()
                 });
 

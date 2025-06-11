@@ -20,13 +20,13 @@ public class PartnerConfiguration : IEntityTypeConfiguration<Partner>
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.Property(p => p.ParnerPhone)
+        builder.Property(p => p.PartnerPhone)
             .HasMaxLength(50);
 
-        builder.Property(p => p.ParnerEmail)
+        builder.Property(p => p.PartnerEmail)
             .HasMaxLength(100);
 
-        builder.Property(p => p.ParnerAddress)
+        builder.Property(p => p.PartnerAddress)
             .HasMaxLength(500);
 
         builder.Property(p => p.Note)

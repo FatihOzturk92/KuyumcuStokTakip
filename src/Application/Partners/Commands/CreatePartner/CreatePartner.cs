@@ -7,9 +7,9 @@ public record CreatePartnerCommand : IRequest<int>
 {
     public string Name { get; init; } = string.Empty;
     public string Type { get; init; } = string.Empty;
-    public string? ParnerPhone { get; init; }
-    public string? ParnerEmail { get; init; }
-    public string? ParnerAddress { get; init; }
+    public string? PartnerPhone { get; init; }
+    public string? PartnerEmail { get; init; }
+    public string? PartnerAddress { get; init; }
     public string? Note { get; init; }
 }
 
@@ -28,9 +28,9 @@ public class CreatePartnerCommandHandler : IRequestHandler<CreatePartnerCommand,
         {
             Name = request.Name,
             Type = request.Type,
-            ParnerPhone = request.ParnerPhone,
-            ParnerEmail = request.ParnerEmail,
-            ParnerAddress = request.ParnerAddress,
+            PartnerPhone = request.PartnerPhone,
+            PartnerEmail = request.PartnerEmail,
+            PartnerAddress = request.PartnerAddress,
             Note = request.Note
         };
 
