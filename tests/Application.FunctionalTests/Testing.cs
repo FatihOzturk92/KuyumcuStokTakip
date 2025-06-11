@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 
 namespace KuyumcuStokTakip.Application.FunctionalTests;
 
@@ -135,6 +136,11 @@ public partial class Testing
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         return await context.Set<TEntity>().CountAsync();
+    }
+
+    public static HttpClient CreateClient()
+    {
+        return _factory.CreateClient();
     }
 
     [OneTimeTearDown]
