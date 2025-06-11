@@ -2360,12 +2360,18 @@
         "x-enumNames": [
           "Purchase",
           "ManualAdjustment",
-          "Sale"
+          "Sale",
+          "Wastage",
+          "Return",
+          "Exchange"
         ],
         "enum": [
           0,
           1,
-          2
+          2,
+          3,
+          4,
+          5
         ]
       },
       "EUnitPriceType": {
