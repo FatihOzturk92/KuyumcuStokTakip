@@ -12,6 +12,8 @@ public record CreateStockTransactionCommand : IRequest<int>
 
     public int InventoryProductId { get; init; }
     public int? ProductItemId { get; init; }
+    public int ProductId { get; init; }
+    public TransactionType TransactionType { get; init; }
 
     public DateTime TransactionDate { get; init; } = DateTime.UtcNow;
 
@@ -50,6 +52,8 @@ public class CreateStockTransactionCommandHandler : IRequestHandler<CreateStockT
             LaborUnitPrice = request.LaborUnitPrice,
             InventoryProductId = request.InventoryProductId,
             ProductItemId = request.ProductItemId,
+            ProductId = request.ProductId,
+            TransactionType = request.TransactionType,
             TransactionDate = request.TransactionDate,
             Quantity = request.Quantity,
             UnitPrice = request.UnitPrice,

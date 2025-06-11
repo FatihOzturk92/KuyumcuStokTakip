@@ -4,6 +4,7 @@ using KuyumcuStokTakip.Infrastructure.Identity;
 using KuyumcuStokTakip.Domain.Entities.Account;
 using KuyumcuStokTakip.Domain.Entities.Inventory;
 using KuyumcuStokTakip.Domain.Entities.Sales;
+using KuyumcuStokTakip.Domain.Enums;
 using Bogus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -211,6 +212,7 @@ public class ApplicationDbContextInitialiser
             _context.StockTransactions.Add(new StockTransaction
             {
                 InventoryProductId = product.Id,
+                ProductId = product.Id,
                 TransactionDate = faker.Date.Recent(),
                 Quantity = faker.Random.Decimal(1, 10),
                 UnitPrice = faker.Random.Decimal(1000, 2000),
@@ -219,6 +221,7 @@ public class ApplicationDbContextInitialiser
                 PureUnitPrice = faker.Random.Decimal(1000, 2000),
                 LaborUnitPrice = faker.Random.Decimal(50, 100),
                 UnitPriceType = EUnitPriceType.TL,
+                TransactionType = TransactionType.Purchase,
                 Type = EStockTransactionType.In,
                 TotalCost = faker.Random.Decimal(1000, 5000)
             });

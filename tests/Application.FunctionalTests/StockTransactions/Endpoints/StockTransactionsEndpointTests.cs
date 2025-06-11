@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using KuyumcuStokTakip.Application.StockTransactions.Commands.CreateStockTransaction;
 using KuyumcuStokTakip.Application.StockTransactions.Commands.UpdateStockTransaction;
 using KuyumcuStokTakip.Domain.Entities.Inventory;
+using KuyumcuStokTakip.Domain.Enums;
 
 namespace KuyumcuStokTakip.Application.FunctionalTests.StockTransactions.Endpoints;
 
@@ -17,10 +18,12 @@ public class StockTransactionsEndpointTests : BaseTestFixture
         var command = new CreateStockTransactionCommand
         {
             InventoryProductId = 1,
+            ProductId = 1,
             Quantity = 1,
             Weight = 1,
             UnitPriceType = EUnitPriceType.Milyem,
-            Type = EStockTransactionType.In
+            Type = EStockTransactionType.In,
+            TransactionType = TransactionType.Purchase
         };
 
         var response = await client.PostAsJsonAsync("/api/StockTransactions", command);
@@ -40,20 +43,24 @@ public class StockTransactionsEndpointTests : BaseTestFixture
         var id = await SendAsync(new CreateStockTransactionCommand
         {
             InventoryProductId = 1,
+            ProductId = 1,
             Quantity = 1,
             Weight = 1,
             UnitPriceType = EUnitPriceType.Milyem,
-            Type = EStockTransactionType.In
+            Type = EStockTransactionType.In,
+            TransactionType = TransactionType.Purchase
         });
 
         var update = new UpdateStockTransactionCommand
         {
             Id = id,
             InventoryProductId = 1,
+            ProductId = 1,
             Quantity = 2,
             Weight = 2,
             UnitPriceType = EUnitPriceType.Milyem,
-            Type = EStockTransactionType.Out
+            Type = EStockTransactionType.Out,
+            TransactionType = TransactionType.ManualAdjustment
         };
 
         var response = await client.PutAsJsonAsync($"/api/StockTransactions/{id}", update);
@@ -72,10 +79,12 @@ public class StockTransactionsEndpointTests : BaseTestFixture
         var id = await SendAsync(new CreateStockTransactionCommand
         {
             InventoryProductId = 1,
+            ProductId = 1,
             Quantity = 1,
             Weight = 1,
             UnitPriceType = EUnitPriceType.Milyem,
-            Type = EStockTransactionType.In
+            Type = EStockTransactionType.In,
+            TransactionType = TransactionType.Purchase
         });
 
         var response = await client.DeleteAsync($"/api/StockTransactions/{id}");

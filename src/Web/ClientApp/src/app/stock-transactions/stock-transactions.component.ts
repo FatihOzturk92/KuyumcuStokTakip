@@ -27,16 +27,16 @@ export class StockTransactionsComponent implements OnInit {
   }
 
   openCreateIn(template: TemplateRef<any>): void {
-    this.title = 'New Giriş Transaction';
+    this.title = 'New Purchase';
     this.selected = undefined;
-    this.editor = { type: 0 };
+    this.editor = { transactionType: 0 };
     this.modalRef = this.modalService.show(template);
   }
 
   openCreateOut(template: TemplateRef<any>): void {
-    this.title = 'New Çıkış Transaction';
+    this.title = 'New Adjustment';
     this.selected = undefined;
-    this.editor = { type: 1 };
+    this.editor = { transactionType: 1 };
     this.modalRef = this.modalService.show(template);
   }
 

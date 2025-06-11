@@ -19,6 +19,8 @@ public class StockTransactionConfiguration : IEntityTypeConfiguration<StockTrans
         builder.Property(t => t.UnitPrice).HasColumnType("decimal(18,2)");
         builder.Property(t => t.Weight).HasColumnType("decimal(18,2)");
         builder.Property(t => t.TotalCost).HasColumnType("decimal(18,2)");
+        builder.Property(t => t.ProductId);
+        builder.Property(t => t.TransactionType).HasConversion<int>();
 
         builder.Property(t => t.Description).HasMaxLength(500);
 

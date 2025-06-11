@@ -13,6 +13,8 @@ public record UpdateStockTransactionCommand : IRequest
 
     public int InventoryProductId { get; init; }
     public int? ProductItemId { get; init; }
+    public int ProductId { get; init; }
+    public TransactionType TransactionType { get; init; }
 
     public DateTime TransactionDate { get; init; } = DateTime.UtcNow;
 
@@ -52,6 +54,8 @@ public class UpdateStockTransactionCommandHandler : IRequestHandler<UpdateStockT
         entity.LaborUnitPrice = request.LaborUnitPrice;
         entity.InventoryProductId = request.InventoryProductId;
         entity.ProductItemId = request.ProductItemId;
+        entity.ProductId = request.ProductId;
+        entity.TransactionType = request.TransactionType;
         entity.TransactionDate = request.TransactionDate;
         entity.Quantity = request.Quantity;
         entity.UnitPrice = request.UnitPrice;

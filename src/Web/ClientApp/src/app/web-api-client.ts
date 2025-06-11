@@ -3352,12 +3352,14 @@ export class StockTransactionDto implements IStockTransactionDto {
     pureUnitPrice?: number;
     laborUnitPrice?: number;
     inventoryProductId?: number;
+    productId?: number;
     productItemId?: number | undefined;
     transactionDate?: Date;
     quantity?: number;
     unitPrice?: number;
     weight?: number;
     unitPriceType?: EUnitPriceType;
+    transactionType?: TransactionType;
     type?: EStockTransactionType;
     description?: string | undefined;
     outgoingTargetType?: ETransactionSourceType | undefined;
@@ -3382,12 +3384,14 @@ export class StockTransactionDto implements IStockTransactionDto {
             this.pureUnitPrice = _data["pureUnitPrice"];
             this.laborUnitPrice = _data["laborUnitPrice"];
             this.inventoryProductId = _data["inventoryProductId"];
+            this.productId = _data["productId"];
             this.productItemId = _data["productItemId"];
             this.transactionDate = _data["transactionDate"] ? new Date(_data["transactionDate"].toString()) : <any>undefined;
             this.quantity = _data["quantity"];
             this.unitPrice = _data["unitPrice"];
             this.weight = _data["weight"];
             this.unitPriceType = _data["unitPriceType"];
+            this.transactionType = _data["transactionType"];
             this.type = _data["type"];
             this.description = _data["description"];
             this.outgoingTargetType = _data["outgoingTargetType"];
@@ -3412,12 +3416,14 @@ export class StockTransactionDto implements IStockTransactionDto {
         data["pureUnitPrice"] = this.pureUnitPrice;
         data["laborUnitPrice"] = this.laborUnitPrice;
         data["inventoryProductId"] = this.inventoryProductId;
+        data["productId"] = this.productId;
         data["productItemId"] = this.productItemId;
         data["transactionDate"] = this.transactionDate ? this.transactionDate.toISOString() : <any>undefined;
         data["quantity"] = this.quantity;
         data["unitPrice"] = this.unitPrice;
         data["weight"] = this.weight;
         data["unitPriceType"] = this.unitPriceType;
+        data["transactionType"] = this.transactionType;
         data["type"] = this.type;
         data["description"] = this.description;
         data["outgoingTargetType"] = this.outgoingTargetType;
@@ -3435,12 +3441,14 @@ export interface IStockTransactionDto {
     pureUnitPrice?: number;
     laborUnitPrice?: number;
     inventoryProductId?: number;
+    productId?: number;
     productItemId?: number | undefined;
     transactionDate?: Date;
     quantity?: number;
     unitPrice?: number;
     weight?: number;
     unitPriceType?: EUnitPriceType;
+    transactionType?: TransactionType;
     type?: EStockTransactionType;
     description?: string | undefined;
     outgoingTargetType?: ETransactionSourceType | undefined;
@@ -3467,6 +3475,11 @@ export enum ETransactionSourceType {
     Anonymous = 2,
 }
 
+export enum TransactionType {
+    Purchase = 0,
+    ManualAdjustment = 1,
+}
+
 export enum ProductKind {
     Bilezik = 0,
     Kolye = 1,
@@ -3490,12 +3503,14 @@ export class CreateStockTransactionCommand implements ICreateStockTransactionCom
     pureUnitPrice?: number;
     laborUnitPrice?: number;
     inventoryProductId?: number;
+    productId?: number;
     productItemId?: number | undefined;
     transactionDate?: Date;
     quantity?: number;
     unitPrice?: number;
     weight?: number;
     unitPriceType?: EUnitPriceType;
+    transactionType?: TransactionType;
     type?: EStockTransactionType;
     description?: string | undefined;
     outgoingTargetType?: ETransactionSourceType | undefined;
@@ -3518,14 +3533,16 @@ export class CreateStockTransactionCommand implements ICreateStockTransactionCom
             this.pureGram = _data["pureGram"];
             this.pureUnitPrice = _data["pureUnitPrice"];
             this.laborUnitPrice = _data["laborUnitPrice"];
-            this.inventoryProductId = _data["inventoryProductId"];
-            this.productItemId = _data["productItemId"];
+           this.inventoryProductId = _data["inventoryProductId"];
+            this.productId = _data["productId"];
+           this.productItemId = _data["productItemId"];
             this.transactionDate = _data["transactionDate"] ? new Date(_data["transactionDate"].toString()) : <any>undefined;
             this.quantity = _data["quantity"];
             this.unitPrice = _data["unitPrice"];
             this.weight = _data["weight"];
-            this.unitPriceType = _data["unitPriceType"];
-            this.type = _data["type"];
+           this.unitPriceType = _data["unitPriceType"];
+            this.transactionType = _data["transactionType"];
+           this.type = _data["type"];
             this.description = _data["description"];
             this.outgoingTargetType = _data["outgoingTargetType"];
             this.sourceCompanyId = _data["sourceCompanyId"];
@@ -3548,12 +3565,14 @@ export class CreateStockTransactionCommand implements ICreateStockTransactionCom
         data["pureUnitPrice"] = this.pureUnitPrice;
         data["laborUnitPrice"] = this.laborUnitPrice;
         data["inventoryProductId"] = this.inventoryProductId;
+        data["productId"] = this.productId;
         data["productItemId"] = this.productItemId;
         data["transactionDate"] = this.transactionDate ? this.transactionDate.toISOString() : <any>undefined;
         data["quantity"] = this.quantity;
         data["unitPrice"] = this.unitPrice;
         data["weight"] = this.weight;
         data["unitPriceType"] = this.unitPriceType;
+        data["transactionType"] = this.transactionType;
         data["type"] = this.type;
         data["description"] = this.description;
         data["outgoingTargetType"] = this.outgoingTargetType;
@@ -3570,12 +3589,14 @@ export interface ICreateStockTransactionCommand {
     pureUnitPrice?: number;
     laborUnitPrice?: number;
     inventoryProductId?: number;
+    productId?: number;
     productItemId?: number | undefined;
     transactionDate?: Date;
     quantity?: number;
     unitPrice?: number;
     weight?: number;
     unitPriceType?: EUnitPriceType;
+    transactionType?: TransactionType;
     type?: EStockTransactionType;
     description?: string | undefined;
     outgoingTargetType?: ETransactionSourceType | undefined;
@@ -3591,12 +3612,14 @@ export class UpdateStockTransactionCommand implements IUpdateStockTransactionCom
     pureUnitPrice?: number;
     laborUnitPrice?: number;
     inventoryProductId?: number;
+    productId?: number;
     productItemId?: number | undefined;
     transactionDate?: Date;
     quantity?: number;
     unitPrice?: number;
     weight?: number;
     unitPriceType?: EUnitPriceType;
+    transactionType?: TransactionType;
     type?: EStockTransactionType;
     description?: string | undefined;
     outgoingTargetType?: ETransactionSourceType | undefined;
@@ -3651,12 +3674,14 @@ export class UpdateStockTransactionCommand implements IUpdateStockTransactionCom
         data["pureUnitPrice"] = this.pureUnitPrice;
         data["laborUnitPrice"] = this.laborUnitPrice;
         data["inventoryProductId"] = this.inventoryProductId;
+        data["productId"] = this.productId;
         data["productItemId"] = this.productItemId;
         data["transactionDate"] = this.transactionDate ? this.transactionDate.toISOString() : <any>undefined;
         data["quantity"] = this.quantity;
         data["unitPrice"] = this.unitPrice;
         data["weight"] = this.weight;
         data["unitPriceType"] = this.unitPriceType;
+        data["transactionType"] = this.transactionType;
         data["type"] = this.type;
         data["description"] = this.description;
         data["outgoingTargetType"] = this.outgoingTargetType;

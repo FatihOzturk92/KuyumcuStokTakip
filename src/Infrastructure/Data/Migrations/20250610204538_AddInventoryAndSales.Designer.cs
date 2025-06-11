@@ -723,6 +723,9 @@ namespace KuyumcuStokTakip.Infrastructure.Data.Migrations
                     b.Property<int?>("OutgoingTargetType")
                         .HasColumnType("int");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ProductItemId")
                         .HasColumnType("int");
 
@@ -746,6 +749,9 @@ namespace KuyumcuStokTakip.Infrastructure.Data.Migrations
 
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("TransactionType")
+                        .HasColumnType("int");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");

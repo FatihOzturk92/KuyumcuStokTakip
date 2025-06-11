@@ -1,6 +1,7 @@
 using System;
 using KuyumcuStokTakip.Domain.Entities.Account;
 using KuyumcuStokTakip.Domain.Entities.Inventory;
+using KuyumcuStokTakip.Domain.Enums;
 
 namespace KuyumcuStokTakip.Domain.Entities.Inventory;
 
@@ -18,9 +19,12 @@ public class StockTransaction : BaseAuditableEntity
 
     public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
 
-    public decimal Quantity { get; set; } // Adet veya gram 
+    public decimal Quantity { get; set; } // Adet veya gram
     public decimal UnitPrice { get; set; } // Birim fiyat 0,936
     public decimal Weight { get; set; } // Toplu işlemde tümünün toplam ağırlığı veya değeri
+
+    public int ProductId { get; set; }
+    public TransactionType TransactionType { get; set; }
 
     public EUnitPriceType UnitPriceType { get; set; } // TL, USD, Milyem
     public EStockTransactionType Type { get; set; } // Giriş / Çıkış
