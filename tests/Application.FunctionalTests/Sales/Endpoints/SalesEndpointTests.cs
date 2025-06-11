@@ -1,7 +1,9 @@
 using System.Net.Http.Json;
 using KuyumcuStokTakip.Application.Sales.Commands.CreateSale;
+using KuyumcuStokTakip.Application.Sales.Queries.GetSaleById;
 using KuyumcuStokTakip.Domain.Entities.Inventory;
 using KuyumcuStokTakip.Domain.Entities.Sales;
+using KuyumcuStokTakip.Application.Sales.Queries.GetSales;
 
 namespace KuyumcuStokTakip.Application.FunctionalTests.Sales.Endpoints;
 
@@ -34,5 +36,29 @@ public class SalesEndpointTests : BaseTestFixture
 
         var after = await CountAsync<StockTransaction>();
         after.Should().Be(before + 1);
+    }
+
+    [Test]
+    public async Task ShouldGetSale()
+    {
+        await RunAsDefaultUserAsync();
+        var client = CreateClient();
+
+        var saleId = await SendAsync(new CreateSaleCommand
+        {
+            Items = [ new CreateSaleCommand.SaleItemDto
+            {
+                InventoryProductId = 1,
+                Quantity = 1,
+                UnitPrice = 100
+            }]
+        });
+
+        var response = await client.GetAsync($"/api/Sales/{saleId}");
+        response.EnsureSuccessStatusCode();
+        var sale = await response.Content.ReadFromJsonAsync<SaleDto>();
+
+        sale.Should().NotBeNull();
+        sale!.Id.Should().Be(saleId);
     }
 }
