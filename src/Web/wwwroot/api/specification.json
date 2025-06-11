@@ -1043,7 +1043,7 @@
         "operationId": "GetStockBalances",
         "parameters": [
           {
-            "name": "search",
+            "name": "SearchTerm",
             "in": "query",
             "schema": {
               "type": "string",
