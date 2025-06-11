@@ -39,11 +39,11 @@ public class GetStockBalanceTests : BaseTestFixture
         });
 
         var result = await SendAsync(new GetStockBalanceQuery());
-        var balance = result.First(x => x.InventoryProductId == 1);
+        var balance = result.First(x => x.ProductId == 1);
 
         balance.TotalIn.Should().Be(5);
         balance.TotalOut.Should().Be(2);
-        balance.NetQuantity.Should().Be(3);
+        balance.Net.Should().Be(3);
     }
 
     [Test]
@@ -86,7 +86,7 @@ public class GetStockBalanceTests : BaseTestFixture
         var result = await SendAsync(new GetStockBalanceQuery { SearchTerm = "Silver" });
 
         result.Should().ContainSingle();
-        result.First().InventoryProductId.Should().Be(productId);
+        result.First().ProductId.Should().Be(productId);
     }
 }
 

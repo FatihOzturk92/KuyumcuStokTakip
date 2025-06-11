@@ -4502,11 +4502,11 @@ export interface ICreateSaleCommand {
 }
 
 export class StockBalanceDto implements IStockBalanceDto {
-    inventoryProductId?: number;
+    productId?: number;
     productName?: string;
     totalIn?: number;
     totalOut?: number;
-    netQuantity?: number;
+    net?: number;
 
     constructor(data?: IStockBalanceDto) {
         if (data) {
@@ -4519,11 +4519,11 @@ export class StockBalanceDto implements IStockBalanceDto {
 
     init(_data?: any) {
         if (_data) {
-            this.inventoryProductId = _data["inventoryProductId"];
+            this.productId = _data["productId"];
             this.productName = _data["productName"];
             this.totalIn = _data["totalIn"];
             this.totalOut = _data["totalOut"];
-            this.netQuantity = _data["netQuantity"];
+            this.net = _data["net"];
         }
     }
 
@@ -4536,21 +4536,21 @@ export class StockBalanceDto implements IStockBalanceDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["inventoryProductId"] = this.inventoryProductId;
+        data["productId"] = this.productId;
         data["productName"] = this.productName;
         data["totalIn"] = this.totalIn;
         data["totalOut"] = this.totalOut;
-        data["netQuantity"] = this.netQuantity;
+        data["net"] = this.net;
         return data;
     }
 }
 
 export interface IStockBalanceDto {
-    inventoryProductId?: number;
+    productId?: number;
     productName?: string;
     totalIn?: number;
     totalOut?: number;
-    netQuantity?: number;
+    net?: number;
 }
 
 export class PaginatedListOfStockTransactionDto implements IPaginatedListOfStockTransactionDto {

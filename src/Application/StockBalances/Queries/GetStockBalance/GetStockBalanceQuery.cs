@@ -34,14 +34,14 @@ public class GetStockBalanceQueryHandler : IRequestHandler<GetStockBalanceQuery,
             .GroupBy(t => new { t.InventoryProductId, t.InventoryProduct.Name })
             .Select(g => new StockBalanceDto
             {
-                InventoryProductId = g.Key.InventoryProductId,
+                ProductId = g.Key.InventoryProductId,
                 ProductName = g.Key.Name,
                 TotalIn = g.Where(t => t.Type == EStockTransactionType.In).Sum(t => t.Quantity),
                 TotalOut = g.Where(t => t.Type == EStockTransactionType.Out).Sum(t => t.Quantity),
-                NetQuantity = g.Where(t => t.Type == EStockTransactionType.In).Sum(t => t.Quantity) -
-                              g.Where(t => t.Type == EStockTransactionType.Out).Sum(t => t.Quantity)
+                Net = g.Where(t => t.Type == EStockTransactionType.In).Sum(t => t.Quantity) -
+                      g.Where(t => t.Type == EStockTransactionType.Out).Sum(t => t.Quantity)
             })
-            .OrderBy(x => x.InventoryProductId)
+            .OrderBy(x => x.ProductId)
             .ToListAsync(cancellationToken);
     }
 }
