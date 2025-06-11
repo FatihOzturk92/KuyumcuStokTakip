@@ -1267,3 +1267,14 @@ export class InventoryProductsClient {
     updateInventoryProduct(id: number, command: UpdateInventoryProductCommand): Observable<void> { return _observableOf(undefined); }
     deleteInventoryProduct(id: number): Observable<void> { return _observableOf(undefined); }
 }
+
+export interface InventoryDto { [key: string]: any; id?: number; }
+export interface CreateInventoryCommand { [key: string]: any; }
+export interface UpdateInventoryCommand { id: number; [key: string]: any; }
+@Injectable({ providedIn: 'root' })
+export class InventoriesClient {
+    getInventories(pageNumber: number, pageSize: number): Observable<any> { return _observableOf({ items: [] }); }
+    createInventory(command: CreateInventoryCommand): Observable<number> { return _observableOf(0); }
+    updateInventory(id: number, command: UpdateInventoryCommand): Observable<void> { return _observableOf(undefined); }
+    deleteInventory(id: number): Observable<void> { return _observableOf(undefined); }
+}
