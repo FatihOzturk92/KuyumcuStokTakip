@@ -1,0 +1,61 @@
+<h1>Sales</h1>
+<form [formGroup]="form" (ngSubmit)="save()">
+  <div class="row mb-2">
+    <div class="col-4">
+      <label class="form-label">Customer</label>
+      <select class="form-select" formControlName="customerId">
+        <option [ngValue]="null">Select</option>
+        <option *ngFor="let c of customers" [ngValue]="c.id">{{ c.firstName }} {{ c.lastName }}</option>
+      </select>
+    </div>
+  </div>
+
+  <table class="table" formArrayName="items">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+        <th>Total</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+        <td>
+          <select class="form-select" formControlName="inventoryProductId">
+            <option [ngValue]="null">Select</option>
+            <option *ngFor="let p of products" [ngValue]="p.id">{{ p.name }}</option>
+          </select>
+        </td>
+        <td><input type="number" class="form-control" formControlName="quantity" /></td>
+        <td><input type="number" class="form-control" formControlName="unitPrice" /></td>
+        <td>{{ item.get('total')?.value | number:'1.2-2' }}</td>
+        <td><button type="button" class="btn btn-sm btn-danger" (click)="removeItem(i)">Remove</button></td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="button" class="btn btn-secondary" (click)="addItem()">Add Line</button>
+  <div class="mt-2">
+    <strong>Total: {{ getTotal() | number:'1.2-2' }}</strong>
+  </div>
+  <button type="submit" class="btn btn-primary mt-2">Save</button>
+</form>
+
+<h2 class="mt-4">Recent Sales</h2>
+<table class="table table-striped" *ngIf="sales.length">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Customer</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let s of sales">
+      <td>{{ s.saleDate | date:'shortDate' }}</td>
+      <td>{{ getCustomerName(s.customerId) }}</td>
+      <td>{{ s.items?.reduce((t, i) => t + i.total!, 0) | number:'1.2-2' }}</td>
+    </tr>
+  </tbody>
+</table>
