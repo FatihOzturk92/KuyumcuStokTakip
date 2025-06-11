@@ -1278,3 +1278,14 @@ export class InventoriesClient {
     updateInventory(id: number, command: UpdateInventoryCommand): Observable<void> { return _observableOf(undefined); }
     deleteInventory(id: number): Observable<void> { return _observableOf(undefined); }
 }
+
+export interface StockTransactionDto { [key: string]: any; id?: number; }
+export interface CreateStockTransactionCommand { [key: string]: any; }
+export interface UpdateStockTransactionCommand { id: number; [key: string]: any; }
+@Injectable({ providedIn: 'root' })
+export class StockTransactionsClient {
+    getStockTransactions(pageNumber: number, pageSize: number): Observable<any> { return _observableOf({ items: [] }); }
+    createStockTransaction(command: CreateStockTransactionCommand): Observable<number> { return _observableOf(0); }
+    updateStockTransaction(id: number, command: UpdateStockTransactionCommand): Observable<void> { return _observableOf(undefined); }
+    deleteStockTransaction(id: number): Observable<void> { return _observableOf(undefined); }
+}
