@@ -1,0 +1,38 @@
+using System.Net.Http.Json;
+using KuyumcuStokTakip.Application.Sales.Commands.CreateSale;
+using KuyumcuStokTakip.Domain.Entities.Inventory;
+using KuyumcuStokTakip.Domain.Entities.Sales;
+
+namespace KuyumcuStokTakip.Application.FunctionalTests.Sales.Endpoints;
+
+using static Testing;
+
+public class SalesEndpointTests : BaseTestFixture
+{
+    [Test]
+    public async Task ShouldCreateSale()
+    {
+        await RunAsDefaultUserAsync();
+        var client = CreateClient();
+        var before = await CountAsync<StockTransaction>();
+        var command = new CreateSaleCommand
+        {
+            Items = [ new CreateSaleCommand.SaleItemDto
+            {
+                InventoryProductId = 1,
+                Quantity = 1,
+                UnitPrice = 100
+            }]
+        };
+
+        var response = await client.PostAsJsonAsync("/api/Sales", command);
+        response.EnsureSuccessStatusCode();
+        var id = await response.Content.ReadFromJsonAsync<int>();
+
+        var sale = await FindAsync<Sale>(id);
+        sale.Should().NotBeNull();
+
+        var after = await CountAsync<StockTransaction>();
+        after.Should().Be(before + 1);
+    }
+}
