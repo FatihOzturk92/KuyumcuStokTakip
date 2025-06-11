@@ -1300,6 +1300,7 @@ export class ProductsClient implements IProductsClient {
 export interface ISalesClient {
     getSales(pageNumber: number, pageSize: number): Observable<PaginatedListOfSaleDto>;
     createSale(command: CreateSaleCommand): Observable<number>;
+    getSale(id: number): Observable<SaleDto>;
 }
 
 @Injectable({
@@ -1415,6 +1416,57 @@ export class SalesClient implements ISalesClient {
                 result201 = resultData201 !== undefined ? resultData201 : <any>null;
     
             return _observableOf(result201);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getSale(id: number): Observable<SaleDto> {
+        let url_ = this.baseUrl + "/api/Sales/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSale(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSale(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SaleDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SaleDto>;
+        }));
+    }
+
+    protected processGetSale(response: HttpResponseBase): Observable<SaleDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SaleDto.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -3668,7 +3720,7 @@ export class SaleDto implements ISaleDto {
     id?: number;
     saleDate?: Date;
     customerId?: number | undefined;
-    customerName?: string | undefined;
+    customerName?: string;
     paymentMethod?: EPaymentType;
     currency?: string | undefined;
     description?: string | undefined;
@@ -3732,7 +3784,7 @@ export interface ISaleDto {
     id?: number;
     saleDate?: Date;
     customerId?: number | undefined;
-    customerName?: string | undefined;
+    customerName?: string;
     paymentMethod?: EPaymentType;
     currency?: string | undefined;
     description?: string | undefined;
@@ -3806,7 +3858,7 @@ export interface ISaleItemDto {
 export class CreateSaleCommand implements ICreateSaleCommand {
     saleDate?: Date;
     customerId?: number | undefined;
-    items?: SaleItemDto2[];
+    items?: SaleItemDto[];
 
     constructor(data?: ICreateSaleCommand) {
         if (data) {
@@ -3824,7 +3876,7 @@ export class CreateSaleCommand implements ICreateSaleCommand {
             if (Array.isArray(_data["items"])) {
                 this.items = [] as any;
                 for (let item of _data["items"])
-                    this.items!.push(SaleItemDto2.fromJS(item));
+                    this.items!.push(SaleItemDto.fromJS(item));
             }
         }
     }
@@ -3852,55 +3904,7 @@ export class CreateSaleCommand implements ICreateSaleCommand {
 export interface ICreateSaleCommand {
     saleDate?: Date;
     customerId?: number | undefined;
-    items?: SaleItemDto2[];
-}
-
-export class SaleItemDto2 implements ISaleItemDto2 {
-    productItemId?: number | undefined;
-    inventoryProductId?: number | undefined;
-    quantity?: number;
-    unitPrice?: number;
-
-    constructor(data?: ISaleItemDto2) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.productItemId = _data["productItemId"];
-            this.inventoryProductId = _data["inventoryProductId"];
-            this.quantity = _data["quantity"];
-            this.unitPrice = _data["unitPrice"];
-        }
-    }
-
-    static fromJS(data: any): SaleItemDto2 {
-        data = typeof data === 'object' ? data : {};
-        let result = new SaleItemDto2();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["productItemId"] = this.productItemId;
-        data["inventoryProductId"] = this.inventoryProductId;
-        data["quantity"] = this.quantity;
-        data["unitPrice"] = this.unitPrice;
-        return data;
-    }
-}
-
-export interface ISaleItemDto2 {
-    productItemId?: number | undefined;
-    inventoryProductId?: number | undefined;
-    quantity?: number;
-    unitPrice?: number;
+    items?: SaleItemDto[];
 }
 
 export class PaginatedListOfStockTransactionDto implements IPaginatedListOfStockTransactionDto {
