@@ -7,6 +7,12 @@ import { StockBalancesClient, StockBalanceDto } from '../web-api-client';
 })
 export class StockBalanceComponent implements OnInit {
   balances: StockBalanceDto[] = [];
+  filterText = '';
+
+  get filteredBalances(): StockBalanceDto[] {
+    const filter = this.filterText?.toLowerCase() ?? '';
+    return this.balances.filter(b => b.productName.toLowerCase().includes(filter));
+  }
 
   constructor(private client: StockBalancesClient) {}
 
@@ -15,7 +21,7 @@ export class StockBalanceComponent implements OnInit {
   }
 
   load(): void {
-    this.client.getStockBalances().subscribe({
+    this.client.getStockBalances(this.filterText).subscribe({
       next: r => (this.balances = r),
       error: err => console.error(err)
     });

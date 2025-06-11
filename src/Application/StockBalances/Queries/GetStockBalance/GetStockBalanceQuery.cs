@@ -5,7 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KuyumcuStokTakip.Application.StockBalances.Queries.GetStockBalance;
 
-public record GetStockBalanceQuery : IRequest<List<StockBalanceDto>>;
+public record GetStockBalanceQuery : IRequest<List<StockBalanceDto>>
+{
+    public string? Search { get; init; }
+}
 
 public class GetStockBalanceQueryHandler : IRequestHandler<GetStockBalanceQuery, List<StockBalanceDto>>
 {
@@ -18,8 +21,16 @@ public class GetStockBalanceQueryHandler : IRequestHandler<GetStockBalanceQuery,
 
     public async Task<List<StockBalanceDto>> Handle(GetStockBalanceQuery request, CancellationToken cancellationToken)
     {
-        return await _context.StockTransactions
+        var query = _context.StockTransactions
             .Include(t => t.InventoryProduct)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(request.Search))
+        {
+            query = query.Where(t => t.InventoryProduct.Name.Contains(request.Search!));
+        }
+
+        return await query
             .GroupBy(t => new { t.InventoryProductId, t.InventoryProduct.Name })
             .Select(g => new StockBalanceDto
             {

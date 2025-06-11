@@ -1,5 +1,8 @@
 <h1>Stock Balance</h1>
-<table class="table table-striped" *ngIf="balances.length">
+<div class="mb-2">
+  <input class="form-control" placeholder="Filter" [(ngModel)]="filterText" (ngModelChange)="load()" />
+</div>
+<table class="table table-striped" *ngIf="filteredBalances.length">
   <thead>
     <tr>
       <th>Product</th>
@@ -9,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let b of balances">
+    <tr *ngFor="let b of filteredBalances">
       <td>{{ b.productName }}</td>
       <td>{{ b.totalIn }}</td>
       <td>{{ b.totalOut }}</td>

@@ -1041,6 +1041,17 @@
           "StockBalances"
         ],
         "operationId": "GetStockBalances",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
