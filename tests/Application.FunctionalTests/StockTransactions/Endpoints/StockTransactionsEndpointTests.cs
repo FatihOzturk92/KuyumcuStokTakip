@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using KuyumcuStokTakip.Application.StockTransactions.Commands.CreateStockTransaction;
 using KuyumcuStokTakip.Application.StockTransactions.Commands.UpdateStockTransaction;
 using KuyumcuStokTakip.Domain.Entities.Inventory;
+using KuyumcuStokTakip.Domain.Entities;
 using KuyumcuStokTakip.Domain.Enums;
 
 namespace KuyumcuStokTakip.Application.FunctionalTests.StockTransactions.Endpoints;

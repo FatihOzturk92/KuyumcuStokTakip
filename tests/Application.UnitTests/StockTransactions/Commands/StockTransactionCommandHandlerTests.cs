@@ -2,6 +2,7 @@ using KuyumcuStokTakip.Application.StockTransactions.Commands.CreateStockTransac
 using KuyumcuStokTakip.Application.StockTransactions.Commands.DeleteStockTransaction;
 using KuyumcuStokTakip.Application.StockTransactions.Commands.UpdateStockTransaction;
 using KuyumcuStokTakip.Domain.Entities.Inventory;
+using KuyumcuStokTakip.Domain.Entities;
 using KuyumcuStokTakip.Domain.Enums;
 using KuyumcuStokTakip.Application.Common.Interfaces;
 using Moq;
@@ -70,8 +71,8 @@ public class StockTransactionCommandHandlerTests
 
         dbSet.Verify(d => d.FindAsync(new object[] { 1 }, It.IsAny<CancellationToken>()), Times.Once);
         _context.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
-        Assert.AreEqual(2, entity.Quantity);
-        Assert.AreEqual(EStockTransactionType.Out, entity.Type);
+        Assert.That(entity.Quantity, Is.EqualTo(2));
+        Assert.That(entity.Type, Is.EqualTo(EStockTransactionType.Out));
     }
 
     [Test]

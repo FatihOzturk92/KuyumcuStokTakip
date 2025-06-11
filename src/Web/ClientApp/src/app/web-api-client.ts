@@ -3478,6 +3478,7 @@ export enum ETransactionSourceType {
 export enum TransactionType {
     Purchase = 0,
     ManualAdjustment = 1,
+    Sale = 2,
 }
 
 export enum ProductKind {
