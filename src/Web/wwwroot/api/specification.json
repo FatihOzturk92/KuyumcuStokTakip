@@ -2585,7 +2585,7 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "inventoryProductId": {
+          "productId": {
             "type": "integer",
             "format": "int32"
           },
@@ -2600,7 +2600,7 @@
             "type": "number",
             "format": "decimal"
           },
-          "netQuantity": {
+          "net": {
             "type": "number",
             "format": "decimal"
           }

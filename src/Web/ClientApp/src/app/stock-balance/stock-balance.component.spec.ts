@@ -16,8 +16,8 @@ describe('StockBalanceComponent', () => {
     fixture = TestBed.createComponent(StockBalanceComponent);
     const component = fixture.componentInstance;
     component.balances = [
-      { productName: 'Gold', totalIn: 1, totalOut: 0, netQuantity: 1, inventoryProductId: 1 } as any,
-      { productName: 'Silver', totalIn: 2, totalOut: 1, netQuantity: 1, inventoryProductId: 2 } as any
+      { productName: 'Gold', totalIn: 1, totalOut: 0, net: 1, productId: 1 } as any,
+      { productName: 'Silver', totalIn: 2, totalOut: 1, net: 1, productId: 2 } as any
     ];
     component.filterText = 'Gold';
     fixture.detectChanges();
