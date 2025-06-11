@@ -5,6 +5,7 @@ public class CreateStockTransactionCommandValidator : AbstractValidator<CreateSt
     public CreateStockTransactionCommandValidator()
     {
         RuleFor(v => v.InventoryProductId).GreaterThan(0);
+        RuleFor(v => v.ProductId).GreaterThan(0);
         RuleFor(v => v.Quantity).GreaterThan(0);
         RuleFor(v => v.UnitPrice).GreaterThanOrEqualTo(0);
         RuleFor(v => v.Weight).GreaterThanOrEqualTo(0);

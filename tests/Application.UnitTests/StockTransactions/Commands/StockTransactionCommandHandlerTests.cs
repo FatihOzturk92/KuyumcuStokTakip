@@ -2,6 +2,7 @@ using KuyumcuStokTakip.Application.StockTransactions.Commands.CreateStockTransac
 using KuyumcuStokTakip.Application.StockTransactions.Commands.DeleteStockTransaction;
 using KuyumcuStokTakip.Application.StockTransactions.Commands.UpdateStockTransaction;
 using KuyumcuStokTakip.Domain.Entities.Inventory;
+using KuyumcuStokTakip.Domain.Enums;
 using KuyumcuStokTakip.Application.Common.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -30,10 +31,12 @@ public class StockTransactionCommandHandlerTests
         var command = new CreateStockTransactionCommand
         {
             InventoryProductId = 1,
+            ProductId = 1,
             Quantity = 1,
             Weight = 1,
             UnitPriceType = EUnitPriceType.Milyem,
-            Type = EStockTransactionType.In
+            Type = EStockTransactionType.In,
+            TransactionType = TransactionType.Purchase
         };
 
         await handler.Handle(command, CancellationToken.None);
@@ -55,10 +58,12 @@ public class StockTransactionCommandHandlerTests
         {
             Id = 1,
             InventoryProductId = 1,
+            ProductId = 1,
             Quantity = 2,
             Weight = 2,
             UnitPriceType = EUnitPriceType.Milyem,
-            Type = EStockTransactionType.Out
+            Type = EStockTransactionType.Out,
+            TransactionType = TransactionType.ManualAdjustment
         };
 
         await handler.Handle(command, CancellationToken.None);

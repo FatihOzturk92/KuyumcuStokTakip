@@ -1,5 +1,6 @@
 using KuyumcuStokTakip.Domain.Entities.Inventory;
 using KuyumcuStokTakip.Domain.Entities;
+using KuyumcuStokTakip.Domain.Enums;
 
 namespace KuyumcuStokTakip.Application.StockTransactions.Queries.GetStockTransactions;
 
@@ -15,6 +16,8 @@ public class StockTransactionDto
     public decimal Quantity { get; init; }
     public decimal UnitPrice { get; init; }
     public decimal Weight { get; init; }
+    public int ProductId { get; init; }
+    public TransactionType TransactionType { get; init; }
     public EUnitPriceType UnitPriceType { get; init; }
     public EStockTransactionType Type { get; init; }
     public string? Description { get; init; }
