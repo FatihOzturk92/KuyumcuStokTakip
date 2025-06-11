@@ -242,12 +242,27 @@ public class ApplicationDbContextInitialiser
                 Description = "Sample sale"
             };
 
-            sale.Items.Add(new SaleItem
+            var saleItem = new SaleItem
             {
                 InventoryProductId = product.Id,
                 Quantity = 1,
                 UnitPrice = 1200
-            });
+            };
+
+            sale.Items.Add(saleItem);
+
+            var saleTransaction = new StockTransaction
+            {
+                InventoryProductId = product.Id,
+                ProductId = product.Id,
+                TransactionDate = sale.SaleDate,
+                Quantity = saleItem.Quantity,
+                UnitPrice = saleItem.UnitPrice,
+                TransactionType = TransactionType.Sale,
+                Type = EStockTransactionType.Out
+            };
+
+            _context.StockTransactions.Add(saleTransaction);
 
             _context.Sales.Add(sale);
 
