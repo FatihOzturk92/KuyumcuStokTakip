@@ -763,24 +763,42 @@
         "operationId": "GetSales",
         "parameters": [
           {
+            "name": "StartDate",
+            "in": "query",
+            "schema": { "type": "string", "format": "date-time", "nullable": true },
+            "x-position": 1
+          },
+          {
+            "name": "EndDate",
+            "in": "query",
+            "schema": { "type": "string", "format": "date-time", "nullable": true },
+            "x-position": 2
+          },
+          {
+            "name": "CustomerName",
+            "in": "query",
+            "schema": { "type": "string", "nullable": true },
+            "x-position": 3
+          },
+          {
+            "name": "CategoryId",
+            "in": "query",
+            "schema": { "type": "integer", "format": "int32", "nullable": true },
+            "x-position": 4
+          },
+          {
             "name": "PageNumber",
             "in": "query",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
+            "schema": { "type": "integer", "format": "int32" },
+            "x-position": 5
           },
           {
             "name": "PageSize",
             "in": "query",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
+            "schema": { "type": "integer", "format": "int32" },
+            "x-position": 6
           }
         ],
         "responses": {
