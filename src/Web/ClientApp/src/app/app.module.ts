@@ -20,6 +20,7 @@ import { StockTransactionsComponent } from './stock-transactions/stock-transacti
 import { ProductsComponent } from './products/products.component';
 import { CustomersComponent } from './customers/customers.component';
 import { SalesComponent } from './sales/sales.component';
+import { StockBalanceComponent } from './stock-balance/stock-balance.component';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -38,6 +39,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         StockTransactionsComponent,
         ProductsComponent,
         CustomersComponent,
+        StockBalanceComponent,
         SalesComponent
     ],
     bootstrap: [AppComponent],
@@ -57,6 +59,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
             { path: 'stock-transactions', component: StockTransactionsComponent },
             { path: 'products', component: ProductsComponent },
             { path: 'customers', component: CustomersComponent },
+            { path: 'stock-balance', component: StockBalanceComponent },
             { path: 'sales', component: SalesComponent }
         ]),
         BrowserAnimationsModule,

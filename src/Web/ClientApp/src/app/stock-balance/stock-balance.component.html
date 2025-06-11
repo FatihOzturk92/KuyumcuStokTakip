@@ -1,0 +1,19 @@
+<h1>Stock Balance</h1>
+<table class="table table-striped" *ngIf="balances.length">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Total In</th>
+      <th>Total Out</th>
+      <th>Net Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let b of balances">
+      <td>{{ b.productName }}</td>
+      <td>{{ b.totalIn }}</td>
+      <td>{{ b.totalOut }}</td>
+      <td>{{ b.netQuantity }}</td>
+    </tr>
+  </tbody>
+</table>

@@ -1296,6 +1296,27 @@
         }
       }
     },
+    "/api/StockBalances": {
+      "get": {
+        "tags": [
+          "StockBalances"
+        ],
+        "operationId": "GetStockBalances",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/StockBalanceDto" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/WeatherForecasts": {
       "get": {
         "tags": [
@@ -2770,6 +2791,17 @@
           }
         }
       },
+        "StockBalanceDto": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "inventoryProductId": { "type": "integer", "format": "int32" },
+            "productName": { "type": "string" },
+            "totalIn": { "type": "number", "format": "decimal" },
+            "totalOut": { "type": "number", "format": "decimal" },
+            "netQuantity": { "type": "number", "format": "decimal" }
+          }
+        },
       "WeatherForecast": {
         "type": "object",
         "additionalProperties": false,

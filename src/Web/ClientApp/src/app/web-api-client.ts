@@ -1709,6 +1709,76 @@ export class StockTransactionsClient implements IStockTransactionsClient {
     }
 }
 
+export interface IStockBalancesClient {
+    getStockBalances(): Observable<StockBalanceDto[]>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class StockBalancesClient implements IStockBalancesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getStockBalances(): Observable<StockBalanceDto[]> {
+        let url_ = this.baseUrl + "/api/StockBalances";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetStockBalances(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetStockBalances(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StockBalanceDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StockBalanceDto[]>;
+        }));
+    }
+
+    protected processGetStockBalances(response: HttpResponseBase): Observable<StockBalanceDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(StockBalanceDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface ITodoItemsClient {
     getTodoItemsWithPagination(listId: number, pageNumber: number, pageSize: number): Observable<PaginatedListOfTodoItemBriefDto>;
     createTodoItem(command: CreateTodoItemCommand): Observable<number>;
@@ -4861,6 +4931,57 @@ export interface IUpdateTodoListCommand {
     title?: string | undefined;
 }
 
+export class StockBalanceDto implements IStockBalanceDto {
+    inventoryProductId?: number;
+    productName?: string;
+    totalIn?: number;
+    totalOut?: number;
+    netQuantity?: number;
+
+    constructor(data?: IStockBalanceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.inventoryProductId = _data["inventoryProductId"];
+            this.productName = _data["productName"];
+            this.totalIn = _data["totalIn"];
+            this.totalOut = _data["totalOut"];
+            this.netQuantity = _data["netQuantity"];
+        }
+    }
+
+    static fromJS(data: any): StockBalanceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StockBalanceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["inventoryProductId"] = this.inventoryProductId;
+        data["productName"] = this.productName;
+        data["totalIn"] = this.totalIn;
+        data["totalOut"] = this.totalOut;
+        data["netQuantity"] = this.netQuantity;
+        return data;
+    }
+}
+
+export interface IStockBalanceDto {
+    inventoryProductId?: number;
+    productName?: string;
+    totalIn?: number;
+    totalOut?: number;
+    netQuantity?: number;
+}
 export class WeatherForecast implements IWeatherForecast {
     date?: Date;
     temperatureC?: number;
