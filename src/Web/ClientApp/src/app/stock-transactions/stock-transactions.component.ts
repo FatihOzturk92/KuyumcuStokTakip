@@ -40,6 +40,27 @@ export class StockTransactionsComponent implements OnInit {
     this.modalRef = this.modalService.show(template);
   }
 
+  openCreateWastage(template: TemplateRef<any>): void {
+    this.title = 'New Wastage';
+    this.selected = undefined;
+    this.editor = { transactionType: 3 };
+    this.modalRef = this.modalService.show(template);
+  }
+
+  openCreateReturn(template: TemplateRef<any>): void {
+    this.title = 'New Return';
+    this.selected = undefined;
+    this.editor = { transactionType: 4 };
+    this.modalRef = this.modalService.show(template);
+  }
+
+  openCreateExchange(template: TemplateRef<any>): void {
+    this.title = 'New Exchange';
+    this.selected = undefined;
+    this.editor = { transactionType: 5 };
+    this.modalRef = this.modalService.show(template);
+  }
+
   openEdit(template: TemplateRef<any>, item: StockTransactionDto): void {
     this.title = 'Edit Transaction';
     this.selected = item;

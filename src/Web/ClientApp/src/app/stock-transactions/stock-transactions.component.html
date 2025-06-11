@@ -1,6 +1,9 @@
 <h1>Stock Transactions</h1>
   <button class="btn btn-primary mb-2 me-1" (click)="openCreateIn(editTemplate)">Alış</button>
-  <button class="btn btn-secondary mb-2" (click)="openCreateOut(editTemplate)">Düzeltme</button>
+  <button class="btn btn-secondary mb-2 me-1" (click)="openCreateOut(editTemplate)">Düzeltme</button>
+  <button class="btn btn-warning mb-2 me-1" (click)="openCreateWastage(editTemplate)">Fire</button>
+  <button class="btn btn-info mb-2 me-1" (click)="openCreateReturn(editTemplate)">İade</button>
+  <button class="btn btn-success mb-2" (click)="openCreateExchange(editTemplate)">Takas</button>
 <table class="table table-striped" *ngIf="transactions.length">
   <thead>
     <tr>
@@ -17,7 +20,14 @@
     <tr>
       <td>{{ t.transactionDate | date:'shortDate' }}</td>
       <td>
-        {{ t.transactionType === 0 ? 'Purchase' : t.transactionType === 1 ? 'Manual Adjustment' : 'Sale' }}
+        {{
+          t.transactionType === 0 ? 'Purchase' :
+          t.transactionType === 1 ? 'Manual Adjustment' :
+          t.transactionType === 2 ? 'Sale' :
+          t.transactionType === 3 ? 'Wastage' :
+          t.transactionType === 4 ? 'Return' :
+          'Exchange'
+        }}
       </td>
       <td>{{ t.pureGram }}</td>
       <td>{{ t.unitPrice }}</td>
@@ -43,6 +53,9 @@
         <option [ngValue]="0">Purchase</option>
         <option [ngValue]="1">Manual Adjustment</option>
         <option [ngValue]="2">Sale</option>
+        <option [ngValue]="3">Wastage</option>
+        <option [ngValue]="4">Return</option>
+        <option [ngValue]="5">Exchange</option>
       </select>
     </div>
     <div class="mb-2">

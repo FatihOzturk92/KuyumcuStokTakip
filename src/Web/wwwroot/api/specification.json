@@ -1,11 +1,147 @@
 {
-  "x-generator": "NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-generator": "NSwag v14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "KuyumcuStokTakip API",
     "version": "1.0.0"
   },
   "paths": {
+    "/api/CashTransactions": {
+      "get": {
+        "tags": [
+          "CashTransactions"
+        ],
+        "operationId": "GetCashTransactions",
+        "parameters": [
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOfCashTransactionDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "CashTransactions"
+        ],
+        "operationId": "CreateCashTransaction",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCashTransactionCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CashTransactions/{id}": {
+      "put": {
+        "tags": [
+          "CashTransactions"
+        ],
+        "operationId": "UpdateCashTransaction",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCashTransactionCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "CashTransactions"
+        ],
+        "operationId": "DeleteCashTransaction",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/Customers": {
       "get": {
         "tags": [
@@ -763,41 +899,62 @@
         "operationId": "GetSales",
         "parameters": [
           {
-            "name": "StartDate",
-            "in": "query",
-            "schema": { "type": "string", "format": "date-time", "nullable": true },
-            "x-position": 1
-          },
-          {
-            "name": "EndDate",
-            "in": "query",
-            "schema": { "type": "string", "format": "date-time", "nullable": true },
-            "x-position": 2
-          },
-          {
-            "name": "CustomerName",
-            "in": "query",
-            "schema": { "type": "string", "nullable": true },
-            "x-position": 3
-          },
-          {
-            "name": "CategoryId",
-            "in": "query",
-            "schema": { "type": "integer", "format": "int32", "nullable": true },
-            "x-position": 4
-          },
-          {
             "name": "PageNumber",
             "in": "query",
             "required": true,
-            "schema": { "type": "integer", "format": "int32" },
-            "x-position": 5
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
           },
           {
             "name": "PageSize",
             "in": "query",
             "required": true,
-            "schema": { "type": "integer", "format": "int32" },
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "StartDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "EndDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "CustomerName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "CategoryId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
             "x-position": 6
           }
         ],
@@ -871,6 +1028,29 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SaleDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/StockBalances": {
+      "get": {
+        "tags": [
+          "StockBalances"
+        ],
+        "operationId": "GetStockBalances",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StockBalanceDto"
+                  }
                 }
               }
             }
@@ -1314,27 +1494,6 @@
         }
       }
     },
-    "/api/StockBalances": {
-      "get": {
-        "tags": [
-          "StockBalances"
-        ],
-        "operationId": "GetStockBalances",
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/StockBalanceDto" }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/WeatherForecasts": {
       "get": {
         "tags": [
@@ -1361,6 +1520,184 @@
   },
   "components": {
     "schemas": {
+      "PaginatedListOfCashTransactionDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CashTransactionDto"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CashTransactionDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "transactionDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "transactionType": {
+            "$ref": "#/components/schemas/CashTransactionType"
+          },
+          "source": {
+            "$ref": "#/components/schemas/CashTransactionSource"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "partnerId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "CashTransactionType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "In",
+          "Out"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "CashTransactionSource": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Cash",
+          "Bank",
+          "Pos"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "CreateCashTransactionCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "transactionDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "transactionType": {
+            "$ref": "#/components/schemas/CashTransactionType"
+          },
+          "source": {
+            "$ref": "#/components/schemas/CashTransactionSource"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "partnerId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateCashTransactionCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "transactionDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "transactionType": {
+            "$ref": "#/components/schemas/CashTransactionType"
+          },
+          "source": {
+            "$ref": "#/components/schemas/CashTransactionSource"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "partnerId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
       "PaginatedListOfCustomerDto": {
         "type": "object",
         "additionalProperties": false,
@@ -2233,6 +2570,31 @@
           }
         }
       },
+      "StockBalanceDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "inventoryProductId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "totalIn": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalOut": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "netQuantity": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
       "PaginatedListOfStockTransactionDto": {
         "type": "object",
         "additionalProperties": false,
@@ -2820,17 +3182,6 @@
           }
         }
       },
-        "StockBalanceDto": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "inventoryProductId": { "type": "integer", "format": "int32" },
-            "productName": { "type": "string" },
-            "totalIn": { "type": "number", "format": "decimal" },
-            "totalOut": { "type": "number", "format": "decimal" },
-            "netQuantity": { "type": "number", "format": "decimal" }
-          }
-        },
       "WeatherForecast": {
         "type": "object",
         "additionalProperties": false,
