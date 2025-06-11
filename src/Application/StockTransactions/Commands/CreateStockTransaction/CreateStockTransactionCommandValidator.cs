@@ -1,3 +1,6 @@
+using KuyumcuStokTakip.Domain.Enums;
+using KuyumcuStokTakip.Domain.Entities;
+
 namespace KuyumcuStokTakip.Application.StockTransactions.Commands.CreateStockTransaction;
 
 public class CreateStockTransactionCommandValidator : AbstractValidator<CreateStockTransactionCommand>
@@ -13,5 +16,16 @@ public class CreateStockTransactionCommandValidator : AbstractValidator<CreateSt
         RuleFor(v => v.PureUnitPrice).GreaterThanOrEqualTo(0);
         RuleFor(v => v.LaborUnitPrice).GreaterThanOrEqualTo(0);
         RuleFor(v => v.TotalCost).GreaterThanOrEqualTo(0);
+
+        When(v => v.TransactionType == TransactionType.Return, () =>
+        {
+            RuleFor(v => v.CustomerId).NotNull();
+            RuleFor(v => v.Type).Equal(EStockTransactionType.In);
+        });
+
+        When(v => v.TransactionType == TransactionType.Wastage, () =>
+        {
+            RuleFor(v => v.Type).Equal(EStockTransactionType.Out);
+        });
     }
 }
