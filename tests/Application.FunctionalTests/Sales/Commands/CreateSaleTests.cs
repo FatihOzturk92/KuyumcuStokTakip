@@ -1,5 +1,6 @@
 using KuyumcuStokTakip.Application.Common.Exceptions;
 using KuyumcuStokTakip.Application.Sales.Commands.CreateSale;
+using KuyumcuStokTakip.Application.Customers.Commands.CreateCustomer;
 using KuyumcuStokTakip.Domain.Entities.Inventory;
 using KuyumcuStokTakip.Domain.Entities.Sales;
 
@@ -29,8 +30,15 @@ public class CreateSaleTests : BaseTestFixture
     {
         var before = await CountAsync<StockTransaction>();
 
+        var customerId = await SendAsync(new CreateCustomerCommand
+        {
+            FirstName = "Jane",
+            LastName = "Doe"
+        });
+
         var command = new CreateSaleCommand
         {
+            CustomerId = customerId,
             Items = [ new CreateSaleCommand.SaleItemDto
             {
                 InventoryProductId = 1,
@@ -46,5 +54,9 @@ public class CreateSaleTests : BaseTestFixture
 
         var after = await CountAsync<StockTransaction>();
         after.Should().Be(before + 1);
+
+        var transaction = await FindAsync<StockTransaction>(after);
+        transaction.Should().NotBeNull();
+        transaction!.CustomerId.Should().Be(customerId);
     }
 }
