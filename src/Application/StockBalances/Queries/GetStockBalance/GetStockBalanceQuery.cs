@@ -7,7 +7,7 @@ namespace KuyumcuStokTakip.Application.StockBalances.Queries.GetStockBalance;
 
 public record GetStockBalanceQuery : IRequest<List<StockBalanceDto>>
 {
-    public string? Search { get; init; }
+    public string? SearchTerm { get; init; }
 }
 
 public class GetStockBalanceQueryHandler : IRequestHandler<GetStockBalanceQuery, List<StockBalanceDto>>
@@ -25,9 +25,9 @@ public class GetStockBalanceQueryHandler : IRequestHandler<GetStockBalanceQuery,
             .Include(t => t.InventoryProduct)
             .AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(request.Search))
+        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
-            query = query.Where(t => t.InventoryProduct.Name.Contains(request.Search!));
+            query = query.Where(t => t.InventoryProduct.Name.Contains(request.SearchTerm!));
         }
 
         return await query
