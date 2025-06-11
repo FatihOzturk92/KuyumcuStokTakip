@@ -1298,7 +1298,7 @@ export class ProductsClient implements IProductsClient {
 }
 
 export interface ISalesClient {
-    getSales(pageNumber: number, pageSize: number): Observable<PaginatedListOfSaleDto>;
+    getSales(startDate: Date | null | undefined, endDate: Date | null | undefined, customerName: string | null | undefined, categoryId: number | null | undefined, pageNumber: number, pageSize: number): Observable<PaginatedListOfSaleDto>;
     createSale(command: CreateSaleCommand): Observable<number>;
     getSale(id: number): Observable<SaleDto>;
 }
@@ -1316,8 +1316,16 @@ export class SalesClient implements ISalesClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    getSales(pageNumber: number, pageSize: number): Observable<PaginatedListOfSaleDto> {
+    getSales(startDate: Date | null | undefined, endDate: Date | null | undefined, customerName: string | null | undefined, categoryId: number | null | undefined, pageNumber: number, pageSize: number): Observable<PaginatedListOfSaleDto> {
         let url_ = this.baseUrl + "/api/Sales?";
+        if (startDate !== undefined && startDate !== null)
+            url_ += "StartDate=" + encodeURIComponent(startDate.toISOString()) + "&";
+        if (endDate !== undefined && endDate !== null)
+            url_ += "EndDate=" + encodeURIComponent(endDate.toISOString()) + "&";
+        if (customerName !== undefined && customerName !== null)
+            url_ += "CustomerName=" + encodeURIComponent("" + customerName) + "&";
+        if (categoryId !== undefined && categoryId !== null)
+            url_ += "CategoryId=" + encodeURIComponent("" + categoryId) + "&";
         if (pageNumber === undefined || pageNumber === null)
             throw new Error("The parameter 'pageNumber' must be defined and cannot be null.");
         else
