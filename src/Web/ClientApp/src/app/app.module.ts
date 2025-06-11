@@ -15,6 +15,7 @@ import { TodoComponent } from './todo/todo.component';
 import { ExpensesComponent } from './expenses/expenses.component';
 import { PartnersComponent } from './partners/partners.component';
 import { InventoryProductsComponent } from './inventory-products/inventory-products.component';
+import { InventoriesComponent } from './inventories/inventories.component';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -28,7 +29,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         TodoComponent,
         ExpensesComponent,
         PartnersComponent,
-        InventoryProductsComponent
+        InventoryProductsComponent,
+        InventoriesComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -41,7 +43,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
             { path: 'todo', component: TodoComponent },
             { path: 'expenses', component: ExpensesComponent },
             { path: 'partners', component: PartnersComponent },
-            { path: 'inventory-products', component: InventoryProductsComponent }
+            { path: 'inventory-products', component: InventoryProductsComponent },
+            { path: 'inventories', component: InventoriesComponent }
         ]),
         BrowserAnimationsModule,
         ModalModule.forRoot()],
