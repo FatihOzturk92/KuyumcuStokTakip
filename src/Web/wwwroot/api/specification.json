@@ -2186,6 +2186,11 @@
           "total": {
             "type": "number",
             "format": "decimal"
+          },
+          "profit": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
           }
         }
       },

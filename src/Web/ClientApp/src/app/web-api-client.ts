@@ -3876,6 +3876,7 @@ export class SaleItemDto implements ISaleItemDto {
     quantity?: number;
     unitPrice?: number;
     total?: number;
+    profit?: number | undefined;
 
     constructor(data?: ISaleItemDto) {
         if (data) {
@@ -3894,6 +3895,7 @@ export class SaleItemDto implements ISaleItemDto {
             this.quantity = _data["quantity"];
             this.unitPrice = _data["unitPrice"];
             this.total = _data["total"];
+            this.profit = _data["profit"];
         }
     }
 
@@ -3912,6 +3914,7 @@ export class SaleItemDto implements ISaleItemDto {
         data["quantity"] = this.quantity;
         data["unitPrice"] = this.unitPrice;
         data["total"] = this.total;
+        data["profit"] = this.profit;
         return data;
     }
 }
@@ -3923,6 +3926,7 @@ export interface ISaleItemDto {
     quantity?: number;
     unitPrice?: number;
     total?: number;
+    profit?: number | undefined;
 }
 
 export class CreateSaleCommand implements ICreateSaleCommand {
