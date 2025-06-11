@@ -2062,6 +2062,9 @@
             "format": "int32",
             "nullable": true
           },
+          "customerName": {
+            "type": "string"
+          },
           "paymentMethod": {
             "$ref": "#/components/schemas/EPaymentType"
           },
@@ -2072,6 +2075,10 @@
           "description": {
             "type": "string",
             "nullable": true
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "decimal"
           },
           "items": {
             "type": "array",
