@@ -40,6 +40,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<Inventory> Inventories => Set<Inventory>();
     public DbSet<InventoryProduct> InventoryProducts => Set<InventoryProduct>();
     public DbSet<ProductCategory> ProductCategories => Set<ProductCategory>();
+    public DbSet<Product> Products => Set<Product>();
     public DbSet<ProductItem> ProductItems => Set<ProductItem>();
     public DbSet<Pricing> Pricings => Set<Pricing>();
     public DbSet<Purity> Purities => Set<Purity>();

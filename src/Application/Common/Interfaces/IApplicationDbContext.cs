@@ -33,6 +33,7 @@ public interface IApplicationDbContext
     DbSet<Inventory> Inventories { get; }
     DbSet<InventoryProduct> InventoryProducts { get; }
     DbSet<ProductCategory> ProductCategories { get; }
+    DbSet<Product> Products { get; }
     DbSet<ProductItem> ProductItems { get; }
     DbSet<Pricing> Pricings { get; }
     DbSet<Purity> Purities { get; }
