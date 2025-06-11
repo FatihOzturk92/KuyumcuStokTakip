@@ -17,6 +17,17 @@ dotnet watch run
 
 Navigate to https://localhost:5001. The application will automatically reload if you change any of the source files.
 
+## Configuration
+
+The application expects the database connection string to be supplied via the
+`KuyumcuStokTakipDb` environment variable. For example:
+
+```bash
+export KuyumcuStokTakipDb="Server=localhost,1433;Database=KuyumcuStokTakipDb;User Id=sa;Password=<your password>;TrustServerCertificate=True;"
+```
+
+Alternatively, you can set `ConnectionStrings__KuyumcuStokTakipDb` when running the application.
+
 ## Code Styles & Formatting
 
 The template includes [EditorConfig](https://editorconfig.org/) support to help maintain consistent coding styles for multiple developers working on the same project across various editors and IDEs. The **.editorconfig** file defines the coding styles applicable to this solution.

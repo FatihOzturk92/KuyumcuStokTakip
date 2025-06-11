@@ -2,6 +2,7 @@
 using KuyumcuStokTakip.Domain.Constants;
 using KuyumcuStokTakip.Infrastructure.Data;
 using KuyumcuStokTakip.Infrastructure.Data.Interceptors;
+using System;
 using KuyumcuStokTakip.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,8 @@ public static class DependencyInjection
 {
     public static void AddInfrastructureServices(this IHostApplicationBuilder builder)
     {
-        var connectionString = builder.Configuration.GetConnectionString("KuyumcuStokTakipDb");
+        var connectionString = Environment.GetEnvironmentVariable("KuyumcuStokTakipDb")
+            ?? builder.Configuration.GetConnectionString("KuyumcuStokTakipDb");
         Guard.Against.Null(connectionString, message: "Connection string 'KuyumcuStokTakipDb' not found.");
 
         builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
