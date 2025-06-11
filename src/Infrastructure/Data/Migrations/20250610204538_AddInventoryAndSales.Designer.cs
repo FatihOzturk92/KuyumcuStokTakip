@@ -161,15 +161,15 @@ namespace KuyumcuStokTakip.Infrastructure.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("ParnerAddress")
+                    b.Property<string>("PartnerAddress")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("ParnerEmail")
+                    b.Property<string>("PartnerEmail")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("ParnerPhone")
+                    b.Property<string>("PartnerPhone")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 

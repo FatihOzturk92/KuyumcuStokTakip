@@ -15,8 +15,8 @@
     <tr>
       <td>{{ p.name }}</td>
       <td>{{ p.type }}</td>
-      <td>{{ p.parnerPhone }}</td>
-      <td>{{ p.parnerEmail }}</td>
+      <td>{{ p.partnerPhone }}</td>
+      <td>{{ p.partnerEmail }}</td>
       <td>
         <button class="btn btn-sm btn-secondary" (click)="openEdit(editTemplate,p)">Edit</button>
         <button class="btn btn-sm btn-danger ms-1" (click)="confirmDelete(deleteTemplate,p)">Delete</button>
@@ -42,11 +42,11 @@
     </div>
     <div class="mb-2">
       <label class="form-label">Phone</label>
-      <input class="form-control" [(ngModel)]="editor.parnerPhone" />
+      <input class="form-control" [(ngModel)]="editor.partnerPhone" />
     </div>
     <div class="mb-2">
       <label class="form-label">Email</label>
-      <input class="form-control" [(ngModel)]="editor.parnerEmail" />
+      <input class="form-control" [(ngModel)]="editor.partnerEmail" />
     </div>
   </div>
   <div class="modal-footer">

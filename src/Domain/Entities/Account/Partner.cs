@@ -8,9 +8,9 @@ public class Partner : BaseAuditableEntity
     public string Name { get; set; } = default!; // Firma veya kişi adı SevGold
     public string Type { get; set; } = default!; // Toptancı, Atölye, Şube vb.
     public ICollection<AccountPartner> ContactPersons { get; set; } = new List<AccountPartner>(); // Bu kişiler bu partnere bağlı
-    public string? ParnerPhone { get; set; }
-    public string? ParnerEmail { get; set; }
-    public string? ParnerAddress { get; set; }
+    public string? PartnerPhone { get; set; }
+    public string? PartnerEmail { get; set; }
+    public string? PartnerAddress { get; set; }
     public string? Note { get; set; }
 
     public ICollection<StockTransaction> IncomingTransactions { get; set; } = new List<StockTransaction>();
