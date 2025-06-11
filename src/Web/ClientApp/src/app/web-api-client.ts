@@ -3668,9 +3668,11 @@ export class SaleDto implements ISaleDto {
     id?: number;
     saleDate?: Date;
     customerId?: number | undefined;
+    customerName?: string | undefined;
     paymentMethod?: EPaymentType;
     currency?: string | undefined;
     description?: string | undefined;
+    totalAmount?: number;
     items?: SaleItemDto[];
 
     constructor(data?: ISaleDto) {
@@ -3687,9 +3689,11 @@ export class SaleDto implements ISaleDto {
             this.id = _data["id"];
             this.saleDate = _data["saleDate"] ? new Date(_data["saleDate"].toString()) : <any>undefined;
             this.customerId = _data["customerId"];
+            this.customerName = _data["customerName"];
             this.paymentMethod = _data["paymentMethod"];
             this.currency = _data["currency"];
             this.description = _data["description"];
+            this.totalAmount = _data["totalAmount"];
             if (Array.isArray(_data["items"])) {
                 this.items = [] as any;
                 for (let item of _data["items"])
@@ -3710,9 +3714,11 @@ export class SaleDto implements ISaleDto {
         data["id"] = this.id;
         data["saleDate"] = this.saleDate ? this.saleDate.toISOString() : <any>undefined;
         data["customerId"] = this.customerId;
+        data["customerName"] = this.customerName;
         data["paymentMethod"] = this.paymentMethod;
         data["currency"] = this.currency;
         data["description"] = this.description;
+        data["totalAmount"] = this.totalAmount;
         if (Array.isArray(this.items)) {
             data["items"] = [];
             for (let item of this.items)
@@ -3726,9 +3732,11 @@ export interface ISaleDto {
     id?: number;
     saleDate?: Date;
     customerId?: number | undefined;
+    customerName?: string | undefined;
     paymentMethod?: EPaymentType;
     currency?: string | undefined;
     description?: string | undefined;
+    totalAmount?: number;
     items?: SaleItemDto[];
 }
 
