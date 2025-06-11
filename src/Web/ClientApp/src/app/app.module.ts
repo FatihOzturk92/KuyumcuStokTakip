@@ -19,6 +19,7 @@ import { InventoriesComponent } from './inventories/inventories.component';
 import { StockTransactionsComponent } from './stock-transactions/stock-transactions.component';
 import { ProductsComponent } from './products/products.component';
 import { CustomersComponent } from './customers/customers.component';
+import { SalesComponent } from './sales/sales.component';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -36,7 +37,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         InventoriesComponent,
         StockTransactionsComponent,
         ProductsComponent,
-        CustomersComponent
+        CustomersComponent,
+        SalesComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -54,7 +56,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
             { path: 'inventories', component: InventoriesComponent },
             { path: 'stock-transactions', component: StockTransactionsComponent },
             { path: 'products', component: ProductsComponent },
-            { path: 'customers', component: CustomersComponent }
+            { path: 'customers', component: CustomersComponent },
+            { path: 'sales', component: SalesComponent }
         ]),
         BrowserAnimationsModule,
         ModalModule.forRoot()],
