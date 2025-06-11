@@ -41,6 +41,7 @@ public class GetStockBalanceTests : BaseTestFixture
         var result = await SendAsync(new GetStockBalanceQuery());
         var balance = result.First(x => x.ProductId == 1);
 
+        balance.ProductName.Should().Be("Altın Bilezik");
         balance.TotalIn.Should().Be(5);
         balance.TotalOut.Should().Be(2);
         balance.Net.Should().Be(3);
@@ -86,7 +87,9 @@ public class GetStockBalanceTests : BaseTestFixture
         var result = await SendAsync(new GetStockBalanceQuery { SearchTerm = "Silver" });
 
         result.Should().ContainSingle();
-        result.First().ProductId.Should().Be(productId);
+        var balance = result.First();
+        balance.ProductId.Should().Be(productId);
+        balance.ProductName.Should().Be("Silver Ring");
     }
 }
 

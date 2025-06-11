@@ -22,7 +22,6 @@ public class GetStockBalanceQueryHandler : IRequestHandler<GetStockBalanceQuery,
     public async Task<List<StockBalanceDto>> Handle(GetStockBalanceQuery request, CancellationToken cancellationToken)
     {
         var query = _context.StockTransactions
-            .Include(t => t.InventoryProduct)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
