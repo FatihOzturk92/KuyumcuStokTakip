@@ -1,11 +1,11 @@
 {
-  "runtime": "Net80",
+  "runtime": "Net90",
   "defaultVariables": null,
   "documentGenerator": {
     "aspNetCoreToOpenApi": {
       "project": "Web.csproj",
       "msBuildProjectExtensionsPath": null,
-      "configuration": null,
+      "configuration": "Release",
       "runtime": null,
       "targetFramework": null,
       "noBuild": true,

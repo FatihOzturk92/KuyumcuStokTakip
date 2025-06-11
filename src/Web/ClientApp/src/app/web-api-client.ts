@@ -15,6 +15,1166 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
+export interface IExpensesClient {
+    getExpenses(pageNumber: number, pageSize: number): Observable<PaginatedListOfExpenseDto>;
+    createExpense(command: CreateExpenseCommand): Observable<number>;
+    updateExpense(id: number, command: UpdateExpenseCommand): Observable<void>;
+    deleteExpense(id: number): Observable<void>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ExpensesClient implements IExpensesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getExpenses(pageNumber: number, pageSize: number): Observable<PaginatedListOfExpenseDto> {
+        let url_ = this.baseUrl + "/api/Expenses?";
+        if (pageNumber === undefined || pageNumber === null)
+            throw new Error("The parameter 'pageNumber' must be defined and cannot be null.");
+        else
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === undefined || pageSize === null)
+            throw new Error("The parameter 'pageSize' must be defined and cannot be null.");
+        else
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetExpenses(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetExpenses(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedListOfExpenseDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedListOfExpenseDto>;
+        }));
+    }
+
+    protected processGetExpenses(response: HttpResponseBase): Observable<PaginatedListOfExpenseDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedListOfExpenseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    createExpense(command: CreateExpenseCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/Expenses";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateExpense(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateExpense(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<number>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<number>;
+        }));
+    }
+
+    protected processCreateExpense(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : <any>null;
+    
+            return _observableOf(result201);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    updateExpense(id: number, command: UpdateExpenseCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/Expenses/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateExpense(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateExpense(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdateExpense(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteExpense(id: number): Observable<void> {
+        let url_ = this.baseUrl + "/api/Expenses/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteExpense(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteExpense(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeleteExpense(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface IInventoriesClient {
+    getInventories(pageNumber: number, pageSize: number): Observable<PaginatedListOfInventoryDto>;
+    createInventory(command: CreateInventoryCommand): Observable<number>;
+    updateInventory(id: number, command: UpdateInventoryCommand): Observable<void>;
+    deleteInventory(id: number): Observable<void>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class InventoriesClient implements IInventoriesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getInventories(pageNumber: number, pageSize: number): Observable<PaginatedListOfInventoryDto> {
+        let url_ = this.baseUrl + "/api/Inventories?";
+        if (pageNumber === undefined || pageNumber === null)
+            throw new Error("The parameter 'pageNumber' must be defined and cannot be null.");
+        else
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === undefined || pageSize === null)
+            throw new Error("The parameter 'pageSize' must be defined and cannot be null.");
+        else
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetInventories(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetInventories(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedListOfInventoryDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedListOfInventoryDto>;
+        }));
+    }
+
+    protected processGetInventories(response: HttpResponseBase): Observable<PaginatedListOfInventoryDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedListOfInventoryDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    createInventory(command: CreateInventoryCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/Inventories";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateInventory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateInventory(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<number>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<number>;
+        }));
+    }
+
+    protected processCreateInventory(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : <any>null;
+    
+            return _observableOf(result201);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    updateInventory(id: number, command: UpdateInventoryCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/Inventories/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateInventory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateInventory(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdateInventory(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteInventory(id: number): Observable<void> {
+        let url_ = this.baseUrl + "/api/Inventories/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteInventory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteInventory(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeleteInventory(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface IInventoryProductsClient {
+    getInventoryProducts(pageNumber: number, pageSize: number): Observable<PaginatedListOfInventoryProductDto>;
+    createInventoryProduct(command: CreateInventoryProductCommand): Observable<number>;
+    updateInventoryProduct(id: number, command: UpdateInventoryProductCommand): Observable<void>;
+    deleteInventoryProduct(id: number): Observable<void>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class InventoryProductsClient implements IInventoryProductsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getInventoryProducts(pageNumber: number, pageSize: number): Observable<PaginatedListOfInventoryProductDto> {
+        let url_ = this.baseUrl + "/api/InventoryProducts?";
+        if (pageNumber === undefined || pageNumber === null)
+            throw new Error("The parameter 'pageNumber' must be defined and cannot be null.");
+        else
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === undefined || pageSize === null)
+            throw new Error("The parameter 'pageSize' must be defined and cannot be null.");
+        else
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetInventoryProducts(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetInventoryProducts(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedListOfInventoryProductDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedListOfInventoryProductDto>;
+        }));
+    }
+
+    protected processGetInventoryProducts(response: HttpResponseBase): Observable<PaginatedListOfInventoryProductDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedListOfInventoryProductDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    createInventoryProduct(command: CreateInventoryProductCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/InventoryProducts";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateInventoryProduct(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateInventoryProduct(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<number>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<number>;
+        }));
+    }
+
+    protected processCreateInventoryProduct(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : <any>null;
+    
+            return _observableOf(result201);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    updateInventoryProduct(id: number, command: UpdateInventoryProductCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/InventoryProducts/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateInventoryProduct(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateInventoryProduct(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdateInventoryProduct(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteInventoryProduct(id: number): Observable<void> {
+        let url_ = this.baseUrl + "/api/InventoryProducts/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteInventoryProduct(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteInventoryProduct(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeleteInventoryProduct(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface IPartnersClient {
+    getPartners(pageNumber: number, pageSize: number): Observable<PaginatedListOfPartnerDto>;
+    createPartner(command: CreatePartnerCommand): Observable<number>;
+    updatePartner(id: number, command: UpdatePartnerCommand): Observable<void>;
+    deletePartner(id: number): Observable<void>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class PartnersClient implements IPartnersClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getPartners(pageNumber: number, pageSize: number): Observable<PaginatedListOfPartnerDto> {
+        let url_ = this.baseUrl + "/api/Partners?";
+        if (pageNumber === undefined || pageNumber === null)
+            throw new Error("The parameter 'pageNumber' must be defined and cannot be null.");
+        else
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === undefined || pageSize === null)
+            throw new Error("The parameter 'pageSize' must be defined and cannot be null.");
+        else
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPartners(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPartners(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedListOfPartnerDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedListOfPartnerDto>;
+        }));
+    }
+
+    protected processGetPartners(response: HttpResponseBase): Observable<PaginatedListOfPartnerDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedListOfPartnerDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    createPartner(command: CreatePartnerCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/Partners";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreatePartner(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreatePartner(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<number>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<number>;
+        }));
+    }
+
+    protected processCreatePartner(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : <any>null;
+    
+            return _observableOf(result201);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    updatePartner(id: number, command: UpdatePartnerCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/Partners/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdatePartner(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdatePartner(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdatePartner(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deletePartner(id: number): Observable<void> {
+        let url_ = this.baseUrl + "/api/Partners/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeletePartner(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeletePartner(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeletePartner(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface IStockTransactionsClient {
+    getStockTransactions(pageNumber: number, pageSize: number): Observable<PaginatedListOfStockTransactionDto>;
+    createStockTransaction(command: CreateStockTransactionCommand): Observable<number>;
+    updateStockTransaction(id: number, command: UpdateStockTransactionCommand): Observable<void>;
+    deleteStockTransaction(id: number): Observable<void>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class StockTransactionsClient implements IStockTransactionsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getStockTransactions(pageNumber: number, pageSize: number): Observable<PaginatedListOfStockTransactionDto> {
+        let url_ = this.baseUrl + "/api/StockTransactions?";
+        if (pageNumber === undefined || pageNumber === null)
+            throw new Error("The parameter 'pageNumber' must be defined and cannot be null.");
+        else
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === undefined || pageSize === null)
+            throw new Error("The parameter 'pageSize' must be defined and cannot be null.");
+        else
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetStockTransactions(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetStockTransactions(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedListOfStockTransactionDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedListOfStockTransactionDto>;
+        }));
+    }
+
+    protected processGetStockTransactions(response: HttpResponseBase): Observable<PaginatedListOfStockTransactionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedListOfStockTransactionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    createStockTransaction(command: CreateStockTransactionCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/StockTransactions";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateStockTransaction(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateStockTransaction(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<number>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<number>;
+        }));
+    }
+
+    protected processCreateStockTransaction(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : <any>null;
+    
+            return _observableOf(result201);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    updateStockTransaction(id: number, command: UpdateStockTransactionCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/StockTransactions/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateStockTransaction(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateStockTransaction(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdateStockTransaction(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteStockTransaction(id: number): Observable<void> {
+        let url_ = this.baseUrl + "/api/StockTransactions/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteStockTransaction(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteStockTransaction(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeleteStockTransaction(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface ITodoItemsClient {
     getTodoItemsWithPagination(listId: number, pageNumber: number, pageSize: number): Observable<PaginatedListOfTodoItemBriefDto>;
     createTodoItem(command: CreateTodoItemCommand): Observable<number>;
@@ -602,6 +1762,1379 @@ export class WeatherForecastsClient implements IWeatherForecastsClient {
         }
         return _observableOf(null as any);
     }
+}
+
+export class PaginatedListOfExpenseDto implements IPaginatedListOfExpenseDto {
+    items?: ExpenseDto[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+
+    constructor(data?: IPaginatedListOfExpenseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(ExpenseDto.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedListOfExpenseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedListOfExpenseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        return data;
+    }
+}
+
+export interface IPaginatedListOfExpenseDto {
+    items?: ExpenseDto[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+}
+
+export class ExpenseDto implements IExpenseDto {
+    id?: number;
+    date?: Date;
+    expenseType?: string;
+    amount?: number;
+    description?: string | undefined;
+    paymentMethod?: string | undefined;
+    currency?: string | undefined;
+
+    constructor(data?: IExpenseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.expenseType = _data["expenseType"];
+            this.amount = _data["amount"];
+            this.description = _data["description"];
+            this.paymentMethod = _data["paymentMethod"];
+            this.currency = _data["currency"];
+        }
+    }
+
+    static fromJS(data: any): ExpenseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ExpenseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["expenseType"] = this.expenseType;
+        data["amount"] = this.amount;
+        data["description"] = this.description;
+        data["paymentMethod"] = this.paymentMethod;
+        data["currency"] = this.currency;
+        return data;
+    }
+}
+
+export interface IExpenseDto {
+    id?: number;
+    date?: Date;
+    expenseType?: string;
+    amount?: number;
+    description?: string | undefined;
+    paymentMethod?: string | undefined;
+    currency?: string | undefined;
+}
+
+export class CreateExpenseCommand implements ICreateExpenseCommand {
+    date?: Date;
+    expenseType?: string;
+    amount?: number;
+    description?: string | undefined;
+    paymentMethod?: string | undefined;
+    currency?: string | undefined;
+
+    constructor(data?: ICreateExpenseCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.expenseType = _data["expenseType"];
+            this.amount = _data["amount"];
+            this.description = _data["description"];
+            this.paymentMethod = _data["paymentMethod"];
+            this.currency = _data["currency"];
+        }
+    }
+
+    static fromJS(data: any): CreateExpenseCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateExpenseCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["expenseType"] = this.expenseType;
+        data["amount"] = this.amount;
+        data["description"] = this.description;
+        data["paymentMethod"] = this.paymentMethod;
+        data["currency"] = this.currency;
+        return data;
+    }
+}
+
+export interface ICreateExpenseCommand {
+    date?: Date;
+    expenseType?: string;
+    amount?: number;
+    description?: string | undefined;
+    paymentMethod?: string | undefined;
+    currency?: string | undefined;
+}
+
+export class UpdateExpenseCommand implements IUpdateExpenseCommand {
+    id?: number;
+    date?: Date;
+    expenseType?: string;
+    amount?: number;
+    description?: string | undefined;
+    paymentMethod?: string | undefined;
+    currency?: string | undefined;
+
+    constructor(data?: IUpdateExpenseCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.expenseType = _data["expenseType"];
+            this.amount = _data["amount"];
+            this.description = _data["description"];
+            this.paymentMethod = _data["paymentMethod"];
+            this.currency = _data["currency"];
+        }
+    }
+
+    static fromJS(data: any): UpdateExpenseCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateExpenseCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["expenseType"] = this.expenseType;
+        data["amount"] = this.amount;
+        data["description"] = this.description;
+        data["paymentMethod"] = this.paymentMethod;
+        data["currency"] = this.currency;
+        return data;
+    }
+}
+
+export interface IUpdateExpenseCommand {
+    id?: number;
+    date?: Date;
+    expenseType?: string;
+    amount?: number;
+    description?: string | undefined;
+    paymentMethod?: string | undefined;
+    currency?: string | undefined;
+}
+
+export class PaginatedListOfInventoryDto implements IPaginatedListOfInventoryDto {
+    items?: InventoryDto[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+
+    constructor(data?: IPaginatedListOfInventoryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(InventoryDto.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedListOfInventoryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedListOfInventoryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        return data;
+    }
+}
+
+export interface IPaginatedListOfInventoryDto {
+    items?: InventoryDto[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+}
+
+export class InventoryDto implements IInventoryDto {
+    id?: number;
+    code?: string;
+    name?: string;
+    description?: string | undefined;
+    accountPartnerId?: number;
+
+    constructor(data?: IInventoryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.accountPartnerId = _data["accountPartnerId"];
+        }
+    }
+
+    static fromJS(data: any): InventoryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new InventoryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["accountPartnerId"] = this.accountPartnerId;
+        return data;
+    }
+}
+
+export interface IInventoryDto {
+    id?: number;
+    code?: string;
+    name?: string;
+    description?: string | undefined;
+    accountPartnerId?: number;
+}
+
+export class CreateInventoryCommand implements ICreateInventoryCommand {
+    code?: string;
+    name?: string;
+    description?: string | undefined;
+    accountPartnerId?: number;
+
+    constructor(data?: ICreateInventoryCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.accountPartnerId = _data["accountPartnerId"];
+        }
+    }
+
+    static fromJS(data: any): CreateInventoryCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateInventoryCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["accountPartnerId"] = this.accountPartnerId;
+        return data;
+    }
+}
+
+export interface ICreateInventoryCommand {
+    code?: string;
+    name?: string;
+    description?: string | undefined;
+    accountPartnerId?: number;
+}
+
+export class UpdateInventoryCommand implements IUpdateInventoryCommand {
+    id?: number;
+    code?: string;
+    name?: string;
+    description?: string | undefined;
+    accountPartnerId?: number;
+
+    constructor(data?: IUpdateInventoryCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.accountPartnerId = _data["accountPartnerId"];
+        }
+    }
+
+    static fromJS(data: any): UpdateInventoryCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateInventoryCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["accountPartnerId"] = this.accountPartnerId;
+        return data;
+    }
+}
+
+export interface IUpdateInventoryCommand {
+    id?: number;
+    code?: string;
+    name?: string;
+    description?: string | undefined;
+    accountPartnerId?: number;
+}
+
+export class PaginatedListOfInventoryProductDto implements IPaginatedListOfInventoryProductDto {
+    items?: InventoryProductDto[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+
+    constructor(data?: IPaginatedListOfInventoryProductDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(InventoryProductDto.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedListOfInventoryProductDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedListOfInventoryProductDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        return data;
+    }
+}
+
+export interface IPaginatedListOfInventoryProductDto {
+    items?: InventoryProductDto[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+}
+
+export class InventoryProductDto implements IInventoryProductDto {
+    id?: number;
+    code?: string;
+    name?: string;
+    description?: string | undefined;
+    categoryId?: number;
+    inventoryId?: number;
+    unitId?: number;
+    totalWeight?: number;
+    totalPieceCount?: number;
+    totalLaborCost?: number;
+    totalMaterialCost?: number;
+
+    constructor(data?: IInventoryProductDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.categoryId = _data["categoryId"];
+            this.inventoryId = _data["inventoryId"];
+            this.unitId = _data["unitId"];
+            this.totalWeight = _data["totalWeight"];
+            this.totalPieceCount = _data["totalPieceCount"];
+            this.totalLaborCost = _data["totalLaborCost"];
+            this.totalMaterialCost = _data["totalMaterialCost"];
+        }
+    }
+
+    static fromJS(data: any): InventoryProductDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new InventoryProductDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["categoryId"] = this.categoryId;
+        data["inventoryId"] = this.inventoryId;
+        data["unitId"] = this.unitId;
+        data["totalWeight"] = this.totalWeight;
+        data["totalPieceCount"] = this.totalPieceCount;
+        data["totalLaborCost"] = this.totalLaborCost;
+        data["totalMaterialCost"] = this.totalMaterialCost;
+        return data;
+    }
+}
+
+export interface IInventoryProductDto {
+    id?: number;
+    code?: string;
+    name?: string;
+    description?: string | undefined;
+    categoryId?: number;
+    inventoryId?: number;
+    unitId?: number;
+    totalWeight?: number;
+    totalPieceCount?: number;
+    totalLaborCost?: number;
+    totalMaterialCost?: number;
+}
+
+export class CreateInventoryProductCommand implements ICreateInventoryProductCommand {
+    code?: string;
+    name?: string;
+    description?: string | undefined;
+    categoryId?: number;
+    inventoryId?: number;
+    unitId?: number;
+    totalWeight?: number;
+    totalPieceCount?: number;
+    totalLaborCost?: number;
+    totalMaterialCost?: number;
+
+    constructor(data?: ICreateInventoryProductCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.categoryId = _data["categoryId"];
+            this.inventoryId = _data["inventoryId"];
+            this.unitId = _data["unitId"];
+            this.totalWeight = _data["totalWeight"];
+            this.totalPieceCount = _data["totalPieceCount"];
+            this.totalLaborCost = _data["totalLaborCost"];
+            this.totalMaterialCost = _data["totalMaterialCost"];
+        }
+    }
+
+    static fromJS(data: any): CreateInventoryProductCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateInventoryProductCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["categoryId"] = this.categoryId;
+        data["inventoryId"] = this.inventoryId;
+        data["unitId"] = this.unitId;
+        data["totalWeight"] = this.totalWeight;
+        data["totalPieceCount"] = this.totalPieceCount;
+        data["totalLaborCost"] = this.totalLaborCost;
+        data["totalMaterialCost"] = this.totalMaterialCost;
+        return data;
+    }
+}
+
+export interface ICreateInventoryProductCommand {
+    code?: string;
+    name?: string;
+    description?: string | undefined;
+    categoryId?: number;
+    inventoryId?: number;
+    unitId?: number;
+    totalWeight?: number;
+    totalPieceCount?: number;
+    totalLaborCost?: number;
+    totalMaterialCost?: number;
+}
+
+export class UpdateInventoryProductCommand implements IUpdateInventoryProductCommand {
+    id?: number;
+    code?: string;
+    name?: string;
+    description?: string | undefined;
+    categoryId?: number;
+    inventoryId?: number;
+    unitId?: number;
+    totalWeight?: number;
+    totalPieceCount?: number;
+    totalLaborCost?: number;
+    totalMaterialCost?: number;
+
+    constructor(data?: IUpdateInventoryProductCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.categoryId = _data["categoryId"];
+            this.inventoryId = _data["inventoryId"];
+            this.unitId = _data["unitId"];
+            this.totalWeight = _data["totalWeight"];
+            this.totalPieceCount = _data["totalPieceCount"];
+            this.totalLaborCost = _data["totalLaborCost"];
+            this.totalMaterialCost = _data["totalMaterialCost"];
+        }
+    }
+
+    static fromJS(data: any): UpdateInventoryProductCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateInventoryProductCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["categoryId"] = this.categoryId;
+        data["inventoryId"] = this.inventoryId;
+        data["unitId"] = this.unitId;
+        data["totalWeight"] = this.totalWeight;
+        data["totalPieceCount"] = this.totalPieceCount;
+        data["totalLaborCost"] = this.totalLaborCost;
+        data["totalMaterialCost"] = this.totalMaterialCost;
+        return data;
+    }
+}
+
+export interface IUpdateInventoryProductCommand {
+    id?: number;
+    code?: string;
+    name?: string;
+    description?: string | undefined;
+    categoryId?: number;
+    inventoryId?: number;
+    unitId?: number;
+    totalWeight?: number;
+    totalPieceCount?: number;
+    totalLaborCost?: number;
+    totalMaterialCost?: number;
+}
+
+export class PaginatedListOfPartnerDto implements IPaginatedListOfPartnerDto {
+    items?: PartnerDto[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+
+    constructor(data?: IPaginatedListOfPartnerDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(PartnerDto.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedListOfPartnerDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedListOfPartnerDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        return data;
+    }
+}
+
+export interface IPaginatedListOfPartnerDto {
+    items?: PartnerDto[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+}
+
+export class PartnerDto implements IPartnerDto {
+    id?: number;
+    name?: string;
+    type?: string;
+    partnerPhone?: string | undefined;
+    partnerEmail?: string | undefined;
+    partnerAddress?: string | undefined;
+    note?: string | undefined;
+
+    constructor(data?: IPartnerDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.type = _data["type"];
+            this.partnerPhone = _data["partnerPhone"];
+            this.partnerEmail = _data["partnerEmail"];
+            this.partnerAddress = _data["partnerAddress"];
+            this.note = _data["note"];
+        }
+    }
+
+    static fromJS(data: any): PartnerDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PartnerDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["type"] = this.type;
+        data["partnerPhone"] = this.partnerPhone;
+        data["partnerEmail"] = this.partnerEmail;
+        data["partnerAddress"] = this.partnerAddress;
+        data["note"] = this.note;
+        return data;
+    }
+}
+
+export interface IPartnerDto {
+    id?: number;
+    name?: string;
+    type?: string;
+    partnerPhone?: string | undefined;
+    partnerEmail?: string | undefined;
+    partnerAddress?: string | undefined;
+    note?: string | undefined;
+}
+
+export class CreatePartnerCommand implements ICreatePartnerCommand {
+    name?: string;
+    type?: string;
+    partnerPhone?: string | undefined;
+    partnerEmail?: string | undefined;
+    partnerAddress?: string | undefined;
+    note?: string | undefined;
+
+    constructor(data?: ICreatePartnerCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.type = _data["type"];
+            this.partnerPhone = _data["partnerPhone"];
+            this.partnerEmail = _data["partnerEmail"];
+            this.partnerAddress = _data["partnerAddress"];
+            this.note = _data["note"];
+        }
+    }
+
+    static fromJS(data: any): CreatePartnerCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreatePartnerCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["type"] = this.type;
+        data["partnerPhone"] = this.partnerPhone;
+        data["partnerEmail"] = this.partnerEmail;
+        data["partnerAddress"] = this.partnerAddress;
+        data["note"] = this.note;
+        return data;
+    }
+}
+
+export interface ICreatePartnerCommand {
+    name?: string;
+    type?: string;
+    partnerPhone?: string | undefined;
+    partnerEmail?: string | undefined;
+    partnerAddress?: string | undefined;
+    note?: string | undefined;
+}
+
+export class UpdatePartnerCommand implements IUpdatePartnerCommand {
+    id?: number;
+    name?: string;
+    type?: string;
+    partnerPhone?: string | undefined;
+    partnerEmail?: string | undefined;
+    partnerAddress?: string | undefined;
+    note?: string | undefined;
+
+    constructor(data?: IUpdatePartnerCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.type = _data["type"];
+            this.partnerPhone = _data["partnerPhone"];
+            this.partnerEmail = _data["partnerEmail"];
+            this.partnerAddress = _data["partnerAddress"];
+            this.note = _data["note"];
+        }
+    }
+
+    static fromJS(data: any): UpdatePartnerCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdatePartnerCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["type"] = this.type;
+        data["partnerPhone"] = this.partnerPhone;
+        data["partnerEmail"] = this.partnerEmail;
+        data["partnerAddress"] = this.partnerAddress;
+        data["note"] = this.note;
+        return data;
+    }
+}
+
+export interface IUpdatePartnerCommand {
+    id?: number;
+    name?: string;
+    type?: string;
+    partnerPhone?: string | undefined;
+    partnerEmail?: string | undefined;
+    partnerAddress?: string | undefined;
+    note?: string | undefined;
+}
+
+export class PaginatedListOfStockTransactionDto implements IPaginatedListOfStockTransactionDto {
+    items?: StockTransactionDto[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+
+    constructor(data?: IPaginatedListOfStockTransactionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(StockTransactionDto.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedListOfStockTransactionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedListOfStockTransactionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        return data;
+    }
+}
+
+export interface IPaginatedListOfStockTransactionDto {
+    items?: StockTransactionDto[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+}
+
+export class StockTransactionDto implements IStockTransactionDto {
+    id?: number;
+    pureGram?: number;
+    pureUnitPrice?: number;
+    laborUnitPrice?: number;
+    inventoryProductId?: number;
+    productItemId?: number | undefined;
+    transactionDate?: Date;
+    quantity?: number;
+    unitPrice?: number;
+    weight?: number;
+    unitPriceType?: EUnitPriceType;
+    type?: EStockTransactionType;
+    description?: string | undefined;
+    outgoingTargetType?: ETransactionSourceType | undefined;
+    sourceCompanyId?: number | undefined;
+    targetCompanyId?: number | undefined;
+    customerId?: number | undefined;
+    totalCost?: number;
+
+    constructor(data?: IStockTransactionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.pureGram = _data["pureGram"];
+            this.pureUnitPrice = _data["pureUnitPrice"];
+            this.laborUnitPrice = _data["laborUnitPrice"];
+            this.inventoryProductId = _data["inventoryProductId"];
+            this.productItemId = _data["productItemId"];
+            this.transactionDate = _data["transactionDate"] ? new Date(_data["transactionDate"].toString()) : <any>undefined;
+            this.quantity = _data["quantity"];
+            this.unitPrice = _data["unitPrice"];
+            this.weight = _data["weight"];
+            this.unitPriceType = _data["unitPriceType"];
+            this.type = _data["type"];
+            this.description = _data["description"];
+            this.outgoingTargetType = _data["outgoingTargetType"];
+            this.sourceCompanyId = _data["sourceCompanyId"];
+            this.targetCompanyId = _data["targetCompanyId"];
+            this.customerId = _data["customerId"];
+            this.totalCost = _data["totalCost"];
+        }
+    }
+
+    static fromJS(data: any): StockTransactionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StockTransactionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["pureGram"] = this.pureGram;
+        data["pureUnitPrice"] = this.pureUnitPrice;
+        data["laborUnitPrice"] = this.laborUnitPrice;
+        data["inventoryProductId"] = this.inventoryProductId;
+        data["productItemId"] = this.productItemId;
+        data["transactionDate"] = this.transactionDate ? this.transactionDate.toISOString() : <any>undefined;
+        data["quantity"] = this.quantity;
+        data["unitPrice"] = this.unitPrice;
+        data["weight"] = this.weight;
+        data["unitPriceType"] = this.unitPriceType;
+        data["type"] = this.type;
+        data["description"] = this.description;
+        data["outgoingTargetType"] = this.outgoingTargetType;
+        data["sourceCompanyId"] = this.sourceCompanyId;
+        data["targetCompanyId"] = this.targetCompanyId;
+        data["customerId"] = this.customerId;
+        data["totalCost"] = this.totalCost;
+        return data;
+    }
+}
+
+export interface IStockTransactionDto {
+    id?: number;
+    pureGram?: number;
+    pureUnitPrice?: number;
+    laborUnitPrice?: number;
+    inventoryProductId?: number;
+    productItemId?: number | undefined;
+    transactionDate?: Date;
+    quantity?: number;
+    unitPrice?: number;
+    weight?: number;
+    unitPriceType?: EUnitPriceType;
+    type?: EStockTransactionType;
+    description?: string | undefined;
+    outgoingTargetType?: ETransactionSourceType | undefined;
+    sourceCompanyId?: number | undefined;
+    targetCompanyId?: number | undefined;
+    customerId?: number | undefined;
+    totalCost?: number;
+}
+
+export enum EUnitPriceType {
+    Milyem = 0,
+    Dolar = 1,
+    TL = 2,
+}
+
+export enum EStockTransactionType {
+    In = 0,
+    Out = 1,
+}
+
+export enum ETransactionSourceType {
+    Customer = 0,
+    Partner = 1,
+    Anonymous = 2,
+}
+
+export class CreateStockTransactionCommand implements ICreateStockTransactionCommand {
+    pureGram?: number;
+    pureUnitPrice?: number;
+    laborUnitPrice?: number;
+    inventoryProductId?: number;
+    productItemId?: number | undefined;
+    transactionDate?: Date;
+    quantity?: number;
+    unitPrice?: number;
+    weight?: number;
+    unitPriceType?: EUnitPriceType;
+    type?: EStockTransactionType;
+    description?: string | undefined;
+    outgoingTargetType?: ETransactionSourceType | undefined;
+    sourceCompanyId?: number | undefined;
+    targetCompanyId?: number | undefined;
+    customerId?: number | undefined;
+    totalCost?: number;
+
+    constructor(data?: ICreateStockTransactionCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.pureGram = _data["pureGram"];
+            this.pureUnitPrice = _data["pureUnitPrice"];
+            this.laborUnitPrice = _data["laborUnitPrice"];
+            this.inventoryProductId = _data["inventoryProductId"];
+            this.productItemId = _data["productItemId"];
+            this.transactionDate = _data["transactionDate"] ? new Date(_data["transactionDate"].toString()) : <any>undefined;
+            this.quantity = _data["quantity"];
+            this.unitPrice = _data["unitPrice"];
+            this.weight = _data["weight"];
+            this.unitPriceType = _data["unitPriceType"];
+            this.type = _data["type"];
+            this.description = _data["description"];
+            this.outgoingTargetType = _data["outgoingTargetType"];
+            this.sourceCompanyId = _data["sourceCompanyId"];
+            this.targetCompanyId = _data["targetCompanyId"];
+            this.customerId = _data["customerId"];
+            this.totalCost = _data["totalCost"];
+        }
+    }
+
+    static fromJS(data: any): CreateStockTransactionCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateStockTransactionCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["pureGram"] = this.pureGram;
+        data["pureUnitPrice"] = this.pureUnitPrice;
+        data["laborUnitPrice"] = this.laborUnitPrice;
+        data["inventoryProductId"] = this.inventoryProductId;
+        data["productItemId"] = this.productItemId;
+        data["transactionDate"] = this.transactionDate ? this.transactionDate.toISOString() : <any>undefined;
+        data["quantity"] = this.quantity;
+        data["unitPrice"] = this.unitPrice;
+        data["weight"] = this.weight;
+        data["unitPriceType"] = this.unitPriceType;
+        data["type"] = this.type;
+        data["description"] = this.description;
+        data["outgoingTargetType"] = this.outgoingTargetType;
+        data["sourceCompanyId"] = this.sourceCompanyId;
+        data["targetCompanyId"] = this.targetCompanyId;
+        data["customerId"] = this.customerId;
+        data["totalCost"] = this.totalCost;
+        return data;
+    }
+}
+
+export interface ICreateStockTransactionCommand {
+    pureGram?: number;
+    pureUnitPrice?: number;
+    laborUnitPrice?: number;
+    inventoryProductId?: number;
+    productItemId?: number | undefined;
+    transactionDate?: Date;
+    quantity?: number;
+    unitPrice?: number;
+    weight?: number;
+    unitPriceType?: EUnitPriceType;
+    type?: EStockTransactionType;
+    description?: string | undefined;
+    outgoingTargetType?: ETransactionSourceType | undefined;
+    sourceCompanyId?: number | undefined;
+    targetCompanyId?: number | undefined;
+    customerId?: number | undefined;
+    totalCost?: number;
+}
+
+export class UpdateStockTransactionCommand implements IUpdateStockTransactionCommand {
+    id?: number;
+    pureGram?: number;
+    pureUnitPrice?: number;
+    laborUnitPrice?: number;
+    inventoryProductId?: number;
+    productItemId?: number | undefined;
+    transactionDate?: Date;
+    quantity?: number;
+    unitPrice?: number;
+    weight?: number;
+    unitPriceType?: EUnitPriceType;
+    type?: EStockTransactionType;
+    description?: string | undefined;
+    outgoingTargetType?: ETransactionSourceType | undefined;
+    sourceCompanyId?: number | undefined;
+    targetCompanyId?: number | undefined;
+    customerId?: number | undefined;
+    totalCost?: number;
+
+    constructor(data?: IUpdateStockTransactionCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.pureGram = _data["pureGram"];
+            this.pureUnitPrice = _data["pureUnitPrice"];
+            this.laborUnitPrice = _data["laborUnitPrice"];
+            this.inventoryProductId = _data["inventoryProductId"];
+            this.productItemId = _data["productItemId"];
+            this.transactionDate = _data["transactionDate"] ? new Date(_data["transactionDate"].toString()) : <any>undefined;
+            this.quantity = _data["quantity"];
+            this.unitPrice = _data["unitPrice"];
+            this.weight = _data["weight"];
+            this.unitPriceType = _data["unitPriceType"];
+            this.type = _data["type"];
+            this.description = _data["description"];
+            this.outgoingTargetType = _data["outgoingTargetType"];
+            this.sourceCompanyId = _data["sourceCompanyId"];
+            this.targetCompanyId = _data["targetCompanyId"];
+            this.customerId = _data["customerId"];
+            this.totalCost = _data["totalCost"];
+        }
+    }
+
+    static fromJS(data: any): UpdateStockTransactionCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateStockTransactionCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["pureGram"] = this.pureGram;
+        data["pureUnitPrice"] = this.pureUnitPrice;
+        data["laborUnitPrice"] = this.laborUnitPrice;
+        data["inventoryProductId"] = this.inventoryProductId;
+        data["productItemId"] = this.productItemId;
+        data["transactionDate"] = this.transactionDate ? this.transactionDate.toISOString() : <any>undefined;
+        data["quantity"] = this.quantity;
+        data["unitPrice"] = this.unitPrice;
+        data["weight"] = this.weight;
+        data["unitPriceType"] = this.unitPriceType;
+        data["type"] = this.type;
+        data["description"] = this.description;
+        data["outgoingTargetType"] = this.outgoingTargetType;
+        data["sourceCompanyId"] = this.sourceCompanyId;
+        data["targetCompanyId"] = this.targetCompanyId;
+        data["customerId"] = this.customerId;
+        data["totalCost"] = this.totalCost;
+        return data;
+    }
+}
+
+export interface IUpdateStockTransactionCommand {
+    id?: number;
+    pureGram?: number;
+    pureUnitPrice?: number;
+    laborUnitPrice?: number;
+    inventoryProductId?: number;
+    productItemId?: number | undefined;
+    transactionDate?: Date;
+    quantity?: number;
+    unitPrice?: number;
+    weight?: number;
+    unitPriceType?: EUnitPriceType;
+    type?: EStockTransactionType;
+    description?: string | undefined;
+    outgoingTargetType?: ETransactionSourceType | undefined;
+    sourceCompanyId?: number | undefined;
+    targetCompanyId?: number | undefined;
+    customerId?: number | undefined;
+    totalCost?: number;
 }
 
 export class PaginatedListOfTodoItemBriefDto implements IPaginatedListOfTodoItemBriefDto {
@@ -1232,60 +3765,4 @@ function blobToText(blob: any): Observable<string> {
             reader.readAsText(blob);
         }
     });
-}
-
-// Temporary stubs for new endpoints - to be replaced by NSwag generation
-export interface ExpenseDto { [key: string]: any; id?: number; }
-export interface CreateExpenseCommand { [key: string]: any; }
-export interface UpdateExpenseCommand { id: number; [key: string]: any; }
-@Injectable({ providedIn: 'root' })
-export class ExpensesClient {
-    getExpenses(pageNumber: number, pageSize: number): Observable<any> { return _observableOf({ items: [] }); }
-    createExpense(command: CreateExpenseCommand): Observable<number> { return _observableOf(0); }
-    updateExpense(id: number, command: UpdateExpenseCommand): Observable<void> { return _observableOf(undefined); }
-    deleteExpense(id: number): Observable<void> { return _observableOf(undefined); }
-}
-
-export interface PartnerDto { [key: string]: any; id?: number; }
-export interface CreatePartnerCommand { [key: string]: any; }
-export interface UpdatePartnerCommand { id: number; [key: string]: any; }
-@Injectable({ providedIn: 'root' })
-export class PartnersClient {
-    getPartners(pageNumber: number, pageSize: number): Observable<any> { return _observableOf({ items: [] }); }
-    createPartner(command: CreatePartnerCommand): Observable<number> { return _observableOf(0); }
-    updatePartner(id: number, command: UpdatePartnerCommand): Observable<void> { return _observableOf(undefined); }
-    deletePartner(id: number): Observable<void> { return _observableOf(undefined); }
-}
-
-export interface InventoryProductDto { [key: string]: any; id?: number; }
-export interface CreateInventoryProductCommand { [key: string]: any; }
-export interface UpdateInventoryProductCommand { id: number; [key: string]: any; }
-@Injectable({ providedIn: 'root' })
-export class InventoryProductsClient {
-    getInventoryProducts(pageNumber: number, pageSize: number): Observable<any> { return _observableOf({ items: [] }); }
-    createInventoryProduct(command: CreateInventoryProductCommand): Observable<number> { return _observableOf(0); }
-    updateInventoryProduct(id: number, command: UpdateInventoryProductCommand): Observable<void> { return _observableOf(undefined); }
-    deleteInventoryProduct(id: number): Observable<void> { return _observableOf(undefined); }
-}
-
-export interface InventoryDto { [key: string]: any; id?: number; }
-export interface CreateInventoryCommand { [key: string]: any; }
-export interface UpdateInventoryCommand { id: number; [key: string]: any; }
-@Injectable({ providedIn: 'root' })
-export class InventoriesClient {
-    getInventories(pageNumber: number, pageSize: number): Observable<any> { return _observableOf({ items: [] }); }
-    createInventory(command: CreateInventoryCommand): Observable<number> { return _observableOf(0); }
-    updateInventory(id: number, command: UpdateInventoryCommand): Observable<void> { return _observableOf(undefined); }
-    deleteInventory(id: number): Observable<void> { return _observableOf(undefined); }
-}
-
-export interface StockTransactionDto { [key: string]: any; id?: number; }
-export interface CreateStockTransactionCommand { [key: string]: any; }
-export interface UpdateStockTransactionCommand { id: number; [key: string]: any; }
-@Injectable({ providedIn: 'root' })
-export class StockTransactionsClient {
-    getStockTransactions(pageNumber: number, pageSize: number): Observable<any> { return _observableOf({ items: [] }); }
-    createStockTransaction(command: CreateStockTransactionCommand): Observable<number> { return _observableOf(0); }
-    updateStockTransaction(id: number, command: UpdateStockTransactionCommand): Observable<void> { return _observableOf(undefined); }
-    deleteStockTransaction(id: number): Observable<void> { return _observableOf(undefined); }
 }
