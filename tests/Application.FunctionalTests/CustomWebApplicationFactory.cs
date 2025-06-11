@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Authentication;
 
 namespace KuyumcuStokTakip.Application.FunctionalTests;
 
@@ -38,6 +39,14 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                     options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
                     options.UseSqlServer(_connection);
                 });
+
+            services.AddAuthentication("Test")
+                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
+            services.PostConfigureAll<AuthenticationOptions>(options =>
+            {
+                options.DefaultAuthenticateScheme = "Test";
+                options.DefaultChallengeScheme = "Test";
+            });
         });
     }
 }
