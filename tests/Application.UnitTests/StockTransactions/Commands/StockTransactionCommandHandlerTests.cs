@@ -46,6 +46,28 @@ public class StockTransactionCommandHandlerTests
         _context.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [TestCase(TransactionType.Wastage, EStockTransactionType.Out)]
+    [TestCase(TransactionType.Return, EStockTransactionType.In)]
+    [TestCase(TransactionType.Exchange, EStockTransactionType.Out)]
+    public async Task CreateHandlerAddsEntityForNewTypes(TransactionType type, EStockTransactionType direction)
+    {
+        var handler = new CreateStockTransactionCommandHandler(_context.Object);
+        var command = new CreateStockTransactionCommand
+        {
+            InventoryProductId = 1,
+            ProductId = 1,
+            Quantity = 1,
+            Weight = 1,
+            UnitPriceType = EUnitPriceType.Milyem,
+            Type = direction,
+            TransactionType = type
+        };
+
+        await handler.Handle(command, CancellationToken.None);
+
+        _context.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
     [Test]
     public async Task UpdateHandlerUpdatesEntity()
     {
