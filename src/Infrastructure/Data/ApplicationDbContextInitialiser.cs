@@ -209,7 +209,7 @@ public class ApplicationDbContextInitialiser
             var faker = new Bogus.Faker("tr");
             var product = _context.InventoryProducts.First();
 
-            _context.StockTransactions.Add(new StockTransaction
+            var purchase = new StockTransaction
             {
                 InventoryProductId = product.Id,
                 ProductId = product.Id,
@@ -224,7 +224,77 @@ public class ApplicationDbContextInitialiser
                 TransactionType = TransactionType.Purchase,
                 Type = EStockTransactionType.In,
                 TotalCost = faker.Random.Decimal(1000, 5000)
-            });
+            };
+
+            var wastage = new StockTransaction
+            {
+                InventoryProductId = product.Id,
+                ProductId = product.Id,
+                TransactionDate = faker.Date.Recent(),
+                Quantity = faker.Random.Decimal(1, 5),
+                UnitPrice = faker.Random.Decimal(500, 1000),
+                Weight = faker.Random.Decimal(1, 50),
+                PureGram = faker.Random.Decimal(1, 50),
+                PureUnitPrice = faker.Random.Decimal(500, 1000),
+                LaborUnitPrice = faker.Random.Decimal(10, 50),
+                UnitPriceType = EUnitPriceType.TL,
+                TransactionType = TransactionType.Wastage,
+                Type = EStockTransactionType.Out,
+                TotalCost = faker.Random.Decimal(500, 2000)
+            };
+
+            var @return = new StockTransaction
+            {
+                InventoryProductId = product.Id,
+                ProductId = product.Id,
+                TransactionDate = faker.Date.Recent(),
+                Quantity = faker.Random.Decimal(1, 5),
+                UnitPrice = faker.Random.Decimal(500, 1000),
+                Weight = faker.Random.Decimal(1, 50),
+                PureGram = faker.Random.Decimal(1, 50),
+                PureUnitPrice = faker.Random.Decimal(500, 1000),
+                LaborUnitPrice = faker.Random.Decimal(10, 50),
+                UnitPriceType = EUnitPriceType.TL,
+                TransactionType = TransactionType.Return,
+                Type = EStockTransactionType.In,
+                TotalCost = faker.Random.Decimal(500, 2000)
+            };
+
+            var exchangeOut = new StockTransaction
+            {
+                InventoryProductId = product.Id,
+                ProductId = product.Id,
+                TransactionDate = faker.Date.Recent(),
+                Quantity = faker.Random.Decimal(1, 5),
+                UnitPrice = faker.Random.Decimal(500, 1000),
+                Weight = faker.Random.Decimal(1, 50),
+                PureGram = faker.Random.Decimal(1, 50),
+                PureUnitPrice = faker.Random.Decimal(500, 1000),
+                LaborUnitPrice = faker.Random.Decimal(10, 50),
+                UnitPriceType = EUnitPriceType.TL,
+                TransactionType = TransactionType.Exchange,
+                Type = EStockTransactionType.Out,
+                TotalCost = faker.Random.Decimal(500, 2000)
+            };
+
+            var exchangeIn = new StockTransaction
+            {
+                InventoryProductId = product.Id,
+                ProductId = product.Id,
+                TransactionDate = faker.Date.Recent(),
+                Quantity = exchangeOut.Quantity,
+                UnitPrice = exchangeOut.UnitPrice,
+                Weight = exchangeOut.Weight,
+                PureGram = exchangeOut.PureGram,
+                PureUnitPrice = exchangeOut.PureUnitPrice,
+                LaborUnitPrice = exchangeOut.LaborUnitPrice,
+                UnitPriceType = EUnitPriceType.TL,
+                TransactionType = TransactionType.Exchange,
+                Type = EStockTransactionType.In,
+                TotalCost = exchangeOut.TotalCost
+            };
+
+            _context.StockTransactions.AddRange(purchase, wastage, @return, exchangeOut, exchangeIn);
 
             await _context.SaveChangesAsync();
         }

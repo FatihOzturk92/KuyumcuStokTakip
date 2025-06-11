@@ -37,6 +37,65 @@ public class StockTransactionsEndpointTests : BaseTestFixture
     }
 
     [Test]
+    public async Task ShouldCreateWastageReturnAndExchange()
+    {
+        await RunAsDefaultUserAsync();
+        var client = CreateClient();
+
+        var wastage = new CreateStockTransactionCommand
+        {
+            InventoryProductId = 1,
+            ProductId = 1,
+            Quantity = 1,
+            Weight = 1,
+            UnitPriceType = EUnitPriceType.Milyem,
+            Type = EStockTransactionType.Out,
+            TransactionType = TransactionType.Wastage
+        };
+        var response = await client.PostAsJsonAsync("/api/StockTransactions", wastage);
+        response.EnsureSuccessStatusCode();
+        var id = await response.Content.ReadFromJsonAsync<int>();
+        var entity = await FindAsync<StockTransaction>(id);
+        entity!.TransactionType.Should().Be(TransactionType.Wastage);
+
+        var @return = new CreateStockTransactionCommand
+        {
+            InventoryProductId = 1,
+            ProductId = 1,
+            Quantity = 1,
+            Weight = 1,
+            UnitPriceType = EUnitPriceType.Milyem,
+            Type = EStockTransactionType.In,
+            TransactionType = TransactionType.Return,
+            CustomerId = 1
+        };
+        response = await client.PostAsJsonAsync("/api/StockTransactions", @return);
+        response.EnsureSuccessStatusCode();
+        id = await response.Content.ReadFromJsonAsync<int>();
+        entity = await FindAsync<StockTransaction>(id);
+        entity!.TransactionType.Should().Be(TransactionType.Return);
+
+        var before = await CountAsync<StockTransaction>();
+        var exchange = new CreateStockTransactionCommand
+        {
+            InventoryProductId = 1,
+            ProductId = 1,
+            Quantity = 1,
+            Weight = 1,
+            UnitPriceType = EUnitPriceType.Milyem,
+            Type = EStockTransactionType.Out,
+            TransactionType = TransactionType.Exchange
+        };
+        response = await client.PostAsJsonAsync("/api/StockTransactions", exchange);
+        response.EnsureSuccessStatusCode();
+        id = await response.Content.ReadFromJsonAsync<int>();
+        entity = await FindAsync<StockTransaction>(id);
+        entity!.TransactionType.Should().Be(TransactionType.Exchange);
+        var after = await CountAsync<StockTransaction>();
+        after.Should().BeGreaterThan(before);
+    }
+
+    [Test]
     public async Task ShouldUpdateStockTransaction()
     {
         await RunAsDefaultUserAsync();
