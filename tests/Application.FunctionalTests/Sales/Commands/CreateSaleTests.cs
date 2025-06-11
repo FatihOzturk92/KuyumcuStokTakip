@@ -1,4 +1,5 @@
 using KuyumcuStokTakip.Application.Common.Exceptions;
+using KuyumcuStokTakip.Application.Sales.Common;
 using KuyumcuStokTakip.Application.Sales.Commands.CreateSale;
 using KuyumcuStokTakip.Application.Customers.Commands.CreateCustomer;
 using KuyumcuStokTakip.Domain.Entities.Inventory;
@@ -19,7 +20,7 @@ public class CreateSaleTests : BaseTestFixture
 
         command = new CreateSaleCommand
         {
-            Items = [ new CreateSaleCommand.SaleItemDto { Quantity = 0, UnitPrice = -1 } ]
+            Items = [ new SaleItemDto { Quantity = 0, UnitPrice = -1 } ]
         };
         await FluentActions.Invoking(() => SendAsync(command))
             .Should().ThrowAsync<ValidationException>();
@@ -39,7 +40,7 @@ public class CreateSaleTests : BaseTestFixture
         var command = new CreateSaleCommand
         {
             CustomerId = customerId,
-            Items = [ new CreateSaleCommand.SaleItemDto
+            Items = [ new SaleItemDto
             {
                 InventoryProductId = 1,
                 Quantity = 1,

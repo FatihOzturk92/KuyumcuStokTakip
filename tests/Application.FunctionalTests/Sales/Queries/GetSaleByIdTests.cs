@@ -1,4 +1,5 @@
 using KuyumcuStokTakip.Application.Sales.Commands.CreateSale;
+using KuyumcuStokTakip.Application.Sales.Common;
 using KuyumcuStokTakip.Application.Sales.Queries.GetSaleById;
 
 namespace KuyumcuStokTakip.Application.FunctionalTests.Sales.Queries;
@@ -14,7 +15,7 @@ public class GetSaleByIdTests : BaseTestFixture
 
         var saleId = await SendAsync(new CreateSaleCommand
         {
-            Items = [ new CreateSaleCommand.SaleItemDto
+            Items = [ new SaleItemDto
             {
                 InventoryProductId = 1,
                 Quantity = 1,

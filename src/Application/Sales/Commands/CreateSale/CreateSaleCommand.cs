@@ -1,5 +1,6 @@
 using KuyumcuStokTakip.Application.Common.Interfaces;
 using KuyumcuStokTakip.Domain.Entities.Inventory;
+using KuyumcuStokTakip.Application.Sales.Common;
 using KuyumcuStokTakip.Domain.Entities.Sales;
 using KuyumcuStokTakip.Domain.Enums;
 using KuyumcuStokTakip.Domain.Entities;
@@ -10,15 +11,7 @@ public record CreateSaleCommand : IRequest<int>
 {
     public DateTime SaleDate { get; init; } = DateTime.UtcNow;
     public int? CustomerId { get; init; }
-    public IList<SaleItemDto> Items { get; init; } = new List<SaleItemDto>();
-
-    public record SaleItemDto
-    {
-        public int? ProductItemId { get; init; }
-        public int? InventoryProductId { get; init; }
-        public decimal Quantity { get; init; }
-        public decimal UnitPrice { get; init; }
-    }
+    public IList<Common.SaleItemDto> Items { get; init; } = new List<Common.SaleItemDto>();
 }
 
 public class CreateSaleCommandHandler : IRequestHandler<CreateSaleCommand, int>

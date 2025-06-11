@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using KuyumcuStokTakip.Application.Sales.Commands.CreateSale;
+using KuyumcuStokTakip.Application.Sales.Common;
 using KuyumcuStokTakip.Application.Sales.Queries.GetSaleById;
 using KuyumcuStokTakip.Domain.Entities.Inventory;
 using KuyumcuStokTakip.Domain.Entities.Sales;
@@ -19,7 +20,7 @@ public class SalesEndpointTests : BaseTestFixture
         var before = await CountAsync<StockTransaction>();
         var command = new CreateSaleCommand
         {
-            Items = [ new CreateSaleCommand.SaleItemDto
+            Items = [ new SaleItemDto
             {
                 InventoryProductId = 1,
                 Quantity = 1,
@@ -46,7 +47,7 @@ public class SalesEndpointTests : BaseTestFixture
 
         var saleId = await SendAsync(new CreateSaleCommand
         {
-            Items = [ new CreateSaleCommand.SaleItemDto
+            Items = [ new SaleItemDto
             {
                 InventoryProductId = 1,
                 Quantity = 1,

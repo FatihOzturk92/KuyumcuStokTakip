@@ -828,6 +828,38 @@
         }
       }
     },
+    "/api/Sales/{id}": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "operationId": "GetSale",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/StockTransactions": {
       "get": {
         "tags": [
@@ -2152,32 +2184,8 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/SaleItemDto2"
+              "$ref": "#/components/schemas/SaleItemDto"
             }
-          }
-        }
-      },
-      "SaleItemDto2": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "productItemId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "inventoryProductId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "quantity": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "unitPrice": {
-            "type": "number",
-            "format": "decimal"
           }
         }
       },
