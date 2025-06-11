@@ -10,6 +10,8 @@ using KuyumcuStokTakip.Application.Expenses.Queries.GetExpenses;
 using KuyumcuStokTakip.Application.Partners.Queries.GetPartners;
 using KuyumcuStokTakip.Domain.Entities;
 using KuyumcuStokTakip.Domain.Entities.Account;
+using KuyumcuStokTakip.Domain.Entities.Inventory;
+using KuyumcuStokTakip.Domain.Entities.Finance;
 using NUnit.Framework;
 
 namespace KuyumcuStokTakip.Application.UnitTests.Common.Mappings;

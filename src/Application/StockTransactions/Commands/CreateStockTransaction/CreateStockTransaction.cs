@@ -1,6 +1,7 @@
 using KuyumcuStokTakip.Application.Common.Interfaces;
 using KuyumcuStokTakip.Domain.Entities;
 using KuyumcuStokTakip.Domain.Entities.Inventory;
+using KuyumcuStokTakip.Domain.Enums;
 
 namespace KuyumcuStokTakip.Application.StockTransactions.Commands.CreateStockTransaction;
 
