@@ -29,6 +29,7 @@ public class StockTransaction : BaseAuditableEntity
     public EUnitPriceType UnitPriceType { get; set; } // TL, USD, Milyem
     public EStockTransactionType Type { get; set; } // Giriş / Çıkış
     public string? Description { get; set; }
+    public string? WastageReason { get; set; }
 
     public ETransactionSourceType? OutgoingTargetType { get; set; }
 

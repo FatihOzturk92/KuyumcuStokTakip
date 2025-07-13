@@ -23,6 +23,7 @@ public class StockTransactionConfiguration : IEntityTypeConfiguration<StockTrans
         builder.Property(t => t.TransactionType).HasConversion<int>();
 
         builder.Property(t => t.Description).HasMaxLength(500);
+        builder.Property(t => t.WastageReason).HasMaxLength(200);
 
         builder.HasOne(t => t.InventoryProduct)
             .WithMany(p => p.Transactions)

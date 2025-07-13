@@ -26,6 +26,7 @@ public record UpdateStockTransactionCommand : IRequest
     public EUnitPriceType UnitPriceType { get; init; }
     public EStockTransactionType Type { get; init; }
     public string? Description { get; init; }
+    public string? WastageReason { get; init; }
 
     public ETransactionSourceType? OutgoingTargetType { get; init; }
 
@@ -64,6 +65,7 @@ public class UpdateStockTransactionCommandHandler : IRequestHandler<UpdateStockT
         entity.UnitPriceType = request.UnitPriceType;
         entity.Type = request.Type;
         entity.Description = request.Description;
+        entity.WastageReason = request.WastageReason;
         entity.OutgoingTargetType = request.OutgoingTargetType;
         entity.SourceCompanyId = request.SourceCompanyId;
         entity.TargetCompanyId = request.TargetCompanyId;
