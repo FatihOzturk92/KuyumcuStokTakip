@@ -2698,6 +2698,10 @@
             "type": "string",
             "nullable": true
           },
+          "wastageReason": {
+            "type": "string",
+            "nullable": true
+          },
           "outgoingTargetType": {
             "nullable": true,
             "oneOf": [
@@ -2845,6 +2849,10 @@
             "type": "string",
             "nullable": true
           },
+          "wastageReason": {
+            "type": "string",
+            "nullable": true
+          },
           "outgoingTargetType": {
             "nullable": true,
             "oneOf": [
@@ -2933,6 +2941,10 @@
             "$ref": "#/components/schemas/EStockTransactionType"
           },
           "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "wastageReason": {
             "type": "string",
             "nullable": true
           },

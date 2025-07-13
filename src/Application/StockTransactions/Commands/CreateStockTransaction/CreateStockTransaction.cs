@@ -25,6 +25,7 @@ public record CreateStockTransactionCommand : IRequest<int>
     public EUnitPriceType UnitPriceType { get; init; }
     public EStockTransactionType Type { get; init; }
     public string? Description { get; init; }
+    public string? WastageReason { get; init; }
 
     public ETransactionSourceType? OutgoingTargetType { get; init; }
 
@@ -76,6 +77,7 @@ public class CreateStockTransactionCommandHandler : IRequestHandler<CreateStockT
                 UnitPriceType = request.UnitPriceType,
                 Type = EStockTransactionType.Out,
                 Description = request.Description,
+                WastageReason = request.WastageReason,
                 OutgoingTargetType = request.OutgoingTargetType,
                 SourceCompanyId = request.SourceCompanyId,
                 TargetCompanyId = request.TargetCompanyId,
@@ -99,6 +101,7 @@ public class CreateStockTransactionCommandHandler : IRequestHandler<CreateStockT
                 UnitPriceType = request.UnitPriceType,
                 Type = EStockTransactionType.In,
                 Description = request.Description,
+                WastageReason = request.WastageReason,
                 OutgoingTargetType = request.OutgoingTargetType,
                 SourceCompanyId = request.SourceCompanyId,
                 TargetCompanyId = request.TargetCompanyId,
@@ -128,6 +131,7 @@ public class CreateStockTransactionCommandHandler : IRequestHandler<CreateStockT
                 UnitPriceType = request.UnitPriceType,
                 Type = type,
                 Description = request.Description,
+                WastageReason = request.WastageReason,
                 OutgoingTargetType = request.OutgoingTargetType,
                 SourceCompanyId = request.SourceCompanyId,
                 TargetCompanyId = request.TargetCompanyId,

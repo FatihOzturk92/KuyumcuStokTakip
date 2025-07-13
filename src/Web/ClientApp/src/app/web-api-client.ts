@@ -4633,6 +4633,7 @@ export class StockTransactionDto implements IStockTransactionDto {
     unitPriceType?: EUnitPriceType;
     type?: EStockTransactionType;
     description?: string | undefined;
+    wastageReason?: string | undefined;
     outgoingTargetType?: ETransactionSourceType | undefined;
     sourceCompanyId?: number | undefined;
     targetCompanyId?: number | undefined;
@@ -4665,6 +4666,7 @@ export class StockTransactionDto implements IStockTransactionDto {
             this.unitPriceType = _data["unitPriceType"];
             this.type = _data["type"];
             this.description = _data["description"];
+            this.wastageReason = _data["wastageReason"];
             this.outgoingTargetType = _data["outgoingTargetType"];
             this.sourceCompanyId = _data["sourceCompanyId"];
             this.targetCompanyId = _data["targetCompanyId"];
@@ -4697,6 +4699,7 @@ export class StockTransactionDto implements IStockTransactionDto {
         data["unitPriceType"] = this.unitPriceType;
         data["type"] = this.type;
         data["description"] = this.description;
+        data["wastageReason"] = this.wastageReason;
         data["outgoingTargetType"] = this.outgoingTargetType;
         data["sourceCompanyId"] = this.sourceCompanyId;
         data["targetCompanyId"] = this.targetCompanyId;
@@ -4722,6 +4725,7 @@ export interface IStockTransactionDto {
     unitPriceType?: EUnitPriceType;
     type?: EStockTransactionType;
     description?: string | undefined;
+    wastageReason?: string | undefined;
     outgoingTargetType?: ETransactionSourceType | undefined;
     sourceCompanyId?: number | undefined;
     targetCompanyId?: number | undefined;
@@ -4770,6 +4774,7 @@ export class CreateStockTransactionCommand implements ICreateStockTransactionCom
     unitPriceType?: EUnitPriceType;
     type?: EStockTransactionType;
     description?: string | undefined;
+    wastageReason?: string | undefined;
     outgoingTargetType?: ETransactionSourceType | undefined;
     sourceCompanyId?: number | undefined;
     targetCompanyId?: number | undefined;
@@ -4801,6 +4806,7 @@ export class CreateStockTransactionCommand implements ICreateStockTransactionCom
             this.unitPriceType = _data["unitPriceType"];
             this.type = _data["type"];
             this.description = _data["description"];
+            this.wastageReason = _data["wastageReason"];
             this.outgoingTargetType = _data["outgoingTargetType"];
             this.sourceCompanyId = _data["sourceCompanyId"];
             this.targetCompanyId = _data["targetCompanyId"];
@@ -4832,6 +4838,7 @@ export class CreateStockTransactionCommand implements ICreateStockTransactionCom
         data["unitPriceType"] = this.unitPriceType;
         data["type"] = this.type;
         data["description"] = this.description;
+        data["wastageReason"] = this.wastageReason;
         data["outgoingTargetType"] = this.outgoingTargetType;
         data["sourceCompanyId"] = this.sourceCompanyId;
         data["targetCompanyId"] = this.targetCompanyId;
@@ -4856,6 +4863,7 @@ export interface ICreateStockTransactionCommand {
     unitPriceType?: EUnitPriceType;
     type?: EStockTransactionType;
     description?: string | undefined;
+    wastageReason?: string | undefined;
     outgoingTargetType?: ETransactionSourceType | undefined;
     sourceCompanyId?: number | undefined;
     targetCompanyId?: number | undefined;
@@ -4943,6 +4951,7 @@ export class UpdateStockTransactionCommand implements IUpdateStockTransactionCom
         data["unitPriceType"] = this.unitPriceType;
         data["type"] = this.type;
         data["description"] = this.description;
+        data["wastageReason"] = this.wastageReason;
         data["outgoingTargetType"] = this.outgoingTargetType;
         data["sourceCompanyId"] = this.sourceCompanyId;
         data["targetCompanyId"] = this.targetCompanyId;

@@ -21,6 +21,7 @@ public class StockTransactionDto
     public EUnitPriceType UnitPriceType { get; init; }
     public EStockTransactionType Type { get; init; }
     public string? Description { get; init; }
+    public string? WastageReason { get; init; }
     public ETransactionSourceType? OutgoingTargetType { get; init; }
     public int? SourceCompanyId { get; init; }
     public int? TargetCompanyId { get; init; }

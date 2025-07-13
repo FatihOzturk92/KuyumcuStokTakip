@@ -240,7 +240,8 @@ public class ApplicationDbContextInitialiser
                 UnitPriceType = EUnitPriceType.TL,
                 TransactionType = TransactionType.Wastage,
                 Type = EStockTransactionType.Out,
-                TotalCost = faker.Random.Decimal(500, 2000)
+                TotalCost = faker.Random.Decimal(500, 2000),
+                WastageReason = "Seed"
             };
 
             var @return = new StockTransaction
