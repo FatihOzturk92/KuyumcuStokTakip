@@ -4,6 +4,8 @@ using KuyumcuStokTakip.Application.Sales.Common;
 using KuyumcuStokTakip.Application.Sales.Queries.GetSaleById;
 using KuyumcuStokTakip.Domain.Entities.Inventory;
 using KuyumcuStokTakip.Domain.Entities.Sales;
+using KuyumcuStokTakip.Application.Sales.Commands.ReturnSale;
+using KuyumcuStokTakip.Domain.Enums;
 using KuyumcuStokTakip.Application.Sales.Queries.GetSales;
 
 namespace KuyumcuStokTakip.Application.FunctionalTests.Sales.Endpoints;
@@ -61,5 +63,31 @@ public class SalesEndpointTests : BaseTestFixture
 
         sale.Should().NotBeNull();
         sale!.Id.Should().Be(saleId);
+    }
+
+    [Test]
+    public async Task ShouldReturnSale()
+    {
+        await RunAsDefaultUserAsync();
+        var client = CreateClient();
+        var before = await CountAsync<StockTransaction>();
+
+        var command = new ReturnSaleCommand
+        {
+            Items = [ new SaleItemDto
+            {
+                InventoryProductId = 1,
+                Quantity = 1,
+                UnitPrice = 100
+            }]
+        };
+
+        var response = await client.PostAsJsonAsync("/api/Sales/return", command);
+        response.EnsureSuccessStatusCode();
+
+        var after = await CountAsync<StockTransaction>();
+        after.Should().Be(before + 1);
+        var entity = await FindAsync<StockTransaction>(after);
+        entity!.TransactionType.Should().Be(TransactionType.Return);
     }
 }
