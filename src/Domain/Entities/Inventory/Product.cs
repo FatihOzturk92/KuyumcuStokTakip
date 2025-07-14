@@ -10,4 +10,8 @@ public class Product : BaseAuditableEntity
     public PurityLevel Purity { get; set; }
     public string? ModelName { get; set; }
     public ProductTrackingType TrackingType { get; set; }
+
+    public string? PhotoUrl { get; set; }
+    public string? CertificateNumber { get; set; }
+    public string? Notes { get; set; }
 }

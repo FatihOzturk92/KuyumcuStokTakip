@@ -18,5 +18,14 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Property(p => p.ModelName)
             .HasMaxLength(200);
+
+        builder.Property(p => p.PhotoUrl)
+            .HasMaxLength(300);
+
+        builder.Property(p => p.CertificateNumber)
+            .HasMaxLength(100);
+
+        builder.Property(p => p.Notes)
+            .HasMaxLength(1000);
     }
 }

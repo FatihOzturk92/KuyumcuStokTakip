@@ -1,5 +1,6 @@
 using KuyumcuStokTakip.Application.Common.Interfaces;
 using KuyumcuStokTakip.Application.Sales.Common;
+using KuyumcuStokTakip.Domain.Entities.Inventory;
 using KuyumcuStokTakip.Domain.Entities;
 using KuyumcuStokTakip.Domain.Enums;
 

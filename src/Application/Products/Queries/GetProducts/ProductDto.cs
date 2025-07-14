@@ -12,6 +12,9 @@ public class ProductDto
     public PurityLevel Purity { get; init; }
     public string? ModelName { get; init; }
     public ProductTrackingType TrackingType { get; init; }
+    public string? PhotoUrl { get; init; }
+    public string? CertificateNumber { get; init; }
+    public string? Notes { get; init; }
 
     private class Mapping : Profile
     {

@@ -2,6 +2,7 @@ using KuyumcuStokTakip.Application.Common.Exceptions;
 using KuyumcuStokTakip.Application.Sales.Commands.ReturnSale;
 using KuyumcuStokTakip.Application.Sales.Common;
 using KuyumcuStokTakip.Domain.Entities;
+using KuyumcuStokTakip.Domain.Entities.Inventory;
 using KuyumcuStokTakip.Domain.Enums;
 
 namespace KuyumcuStokTakip.Application.FunctionalTests.Sales.Commands;
