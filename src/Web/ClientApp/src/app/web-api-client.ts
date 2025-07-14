@@ -4123,6 +4123,9 @@ export class ProductDto implements IProductDto {
     purity?: PurityLevel;
     modelName?: string | undefined;
     trackingType?: ProductTrackingType;
+    photoUrl?: string | undefined;
+    certificateNumber?: string | undefined;
+    notes?: string | undefined;
 
     constructor(data?: IProductDto) {
         if (data) {
@@ -4141,6 +4144,9 @@ export class ProductDto implements IProductDto {
             this.purity = _data["purity"];
             this.modelName = _data["modelName"];
             this.trackingType = _data["trackingType"];
+            this.photoUrl = _data["photoUrl"];
+            this.certificateNumber = _data["certificateNumber"];
+            this.notes = _data["notes"];
         }
     }
 
@@ -4159,6 +4165,9 @@ export class ProductDto implements IProductDto {
         data["purity"] = this.purity;
         data["modelName"] = this.modelName;
         data["trackingType"] = this.trackingType;
+        data["photoUrl"] = this.photoUrl;
+        data["certificateNumber"] = this.certificateNumber;
+        data["notes"] = this.notes;
         return data;
     }
 }
@@ -4170,6 +4179,9 @@ export interface IProductDto {
     purity?: PurityLevel;
     modelName?: string | undefined;
     trackingType?: ProductTrackingType;
+    photoUrl?: string | undefined;
+    certificateNumber?: string | undefined;
+    notes?: string | undefined;
 }
 
 export enum ProductKind {
@@ -4196,6 +4208,9 @@ export class CreateProductCommand implements ICreateProductCommand {
     purity?: PurityLevel;
     modelName?: string | undefined;
     trackingType?: ProductTrackingType;
+    photoUrl?: string | undefined;
+    certificateNumber?: string | undefined;
+    notes?: string | undefined;
 
     constructor(data?: ICreateProductCommand) {
         if (data) {
@@ -4213,6 +4228,9 @@ export class CreateProductCommand implements ICreateProductCommand {
             this.purity = _data["purity"];
             this.modelName = _data["modelName"];
             this.trackingType = _data["trackingType"];
+            this.photoUrl = _data["photoUrl"];
+            this.certificateNumber = _data["certificateNumber"];
+            this.notes = _data["notes"];
         }
     }
 
@@ -4230,6 +4248,9 @@ export class CreateProductCommand implements ICreateProductCommand {
         data["purity"] = this.purity;
         data["modelName"] = this.modelName;
         data["trackingType"] = this.trackingType;
+        data["photoUrl"] = this.photoUrl;
+        data["certificateNumber"] = this.certificateNumber;
+        data["notes"] = this.notes;
         return data;
     }
 }
@@ -4240,6 +4261,9 @@ export interface ICreateProductCommand {
     purity?: PurityLevel;
     modelName?: string | undefined;
     trackingType?: ProductTrackingType;
+    photoUrl?: string | undefined;
+    certificateNumber?: string | undefined;
+    notes?: string | undefined;
 }
 
 export class PaginatedListOfSaleDto implements IPaginatedListOfSaleDto {

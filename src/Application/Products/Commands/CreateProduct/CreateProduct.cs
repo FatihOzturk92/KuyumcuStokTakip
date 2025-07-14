@@ -11,6 +11,9 @@ public record CreateProductCommand : IRequest<int>
     public PurityLevel Purity { get; init; }
     public string? ModelName { get; init; }
     public ProductTrackingType TrackingType { get; init; }
+    public string? PhotoUrl { get; init; }
+    public string? CertificateNumber { get; init; }
+    public string? Notes { get; init; }
 }
 
 public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, int>
@@ -30,7 +33,10 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             ProductType = request.ProductType,
             Purity = request.Purity,
             ModelName = request.ModelName,
-            TrackingType = request.TrackingType
+            TrackingType = request.TrackingType,
+            PhotoUrl = request.PhotoUrl,
+            CertificateNumber = request.CertificateNumber,
+            Notes = request.Notes
         };
 
         _context.Products.Add(entity);

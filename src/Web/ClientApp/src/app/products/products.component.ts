@@ -22,7 +22,10 @@ export class ProductsComponent implements OnInit {
       productType: [0, Validators.required],
       purity: [14, Validators.required],
       modelName: [''],
-      trackingType: [0, Validators.required]
+      trackingType: [0, Validators.required],
+      photoUrl: [''],
+      certificateNumber: [''],
+      notes: ['']
     });
   }
 
@@ -35,7 +38,7 @@ export class ProductsComponent implements OnInit {
 
   openCreate(template: TemplateRef<any>): void {
     this.selected = undefined;
-    this.form.reset({ productType: 0, purity: 14, trackingType: 0 });
+    this.form.reset({ productType: 0, purity: 14, trackingType: 0, photoUrl: '', certificateNumber: '', notes: '' });
     this.modalRef = this.modalService.show(template);
   }
 
